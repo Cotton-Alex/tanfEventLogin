@@ -1,7 +1,7 @@
 <?php
 
 /* Specify the server and connection string attributes. */
-$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS";
+$serverName = "TH-B03-VMWKS07\SQLEXPRESS";
 $connectionInfo = array("Database" => "beta_torresmartinez");
 /* Connect using Windows Authentication. */
 $conn = sqlsrv_connect($serverName, $connectionInfo);
