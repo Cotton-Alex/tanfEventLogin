@@ -19,7 +19,7 @@
         if ($oneTimeEventNamesCount > 0) {
             BeginProductsTable($oneTimeEventNamesCount);
             foreach ($oneTimeEventNames as $row) {
-                PopulateProductsTable($row);
+                echo $row;
             }
             EndProductsTable();
         } else {
