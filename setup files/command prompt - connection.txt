@@ -1,6 +1,6 @@
 Please enter the dsn (see https://php.net/manual/en/ref.pdo-sqlsrv.connection.php#refsect1-ref.pdo-sqlsrv.connection-description) for your database connection: sqlsrv:Server=DESKTOP-LF2D9SR\SQLEXPRESS;Database=beta_torresmartinez
 Please enter your database user [root]: propel
-Please enter your database password:
+Please enter your database password: propel123
 Which charset would you like to use? [utf8]:
 
 
