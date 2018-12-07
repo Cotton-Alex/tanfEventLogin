@@ -1,60 +1,42 @@
 <!DOCTYPE html>
 <?php require('waConnect.php'); ?>
-<?php require('functions.php'); ?>
 <html>
     <head>
         <meta charset="UTF-8">
         <title></title>
     </head>
     <body>
+        <!--        <form>
+                    <input type="button" onclick="personInfo()"/>
+                </form>-->
         <?php
-        //case 'getOneTimeEventNames':
-        $params = array(&$_POST['query']);
-        $tsql = "SELECT [TANFOneTimeEventManagementID], [EventName]
-        FROM [beta_torresmartinez] . [TANFOneTimeEventManagementModule] . [TANFOneTimeEventManagement]";
-        $getOneTimeEventNames = $conn->prepare($tsql);
-        $getOneTimeEventNames->execute($params);
-        $oneTimeEventNames = $getOneTimeEventNames->fetchAll(PDO::FETCH_ASSOC);
-        $oneTimeEventNamesCount = count($oneTimeEventNames);
-        if ($oneTimeEventNamesCount > 0) {
-            BeginProductsTable($oneTimeEventNamesCount);
-            foreach ($oneTimeEventNames as $row) {
-                echo $row;
-            }
-            EndProductsTable();
-        } else {
-            DisplayNoProdutsMsg();
+        /* Set up and execute the query. */
+        $tsql = "SELECT [PersonID]
+      ,[FirstName]
+      ,[MiddleName]
+      ,[LastName]
+      ,[Suffix]
+      ,[DateOfBirth]
+      ,[DateOfDeath]
+      ,[Active]
+      ,[Prefix]
+       FROM [beta_torresmartinez].[PersonModule].[Person]
+       WHERE [PersonID] = 29";
+
+        $stmt = sqlsrv_query($conn, $tsql);
+        if ($stmt === false) {
+            echo "Error in query preparation/execution.\n";
+            die(print_r(sqlsrv_errors(), true));
         }
-//        } catch (Exception $e) {
-//        die(print_r($e->getMessage()));
-//        }
-//        GetSearchTerms(!null);
-//        break;
-//        case 'getproducts':
-//        try {
-//        $params = array($_POST['query']);
-//        $tsql = "SELECT ProductID, Name, Color, Size, ListPrice
-//FROM Production.Product
-//WHERE Name LIKE '%' + ? + '%' AND ListPrice > 0.0";
-//        $getProducts = $conn->prepare($tsql);
-//        $getProducts->execute($params);
-//        $products = $getProducts->fetchAll(PDO::FETCH_ASSOC);
-//        $productCount = count($products);
-//        if ($productCount > 0) {
-//        BeginProductsTable($productCount);
-//        foreach ($products as $row) {
-//        PopulateProductsTable($row);
-//        }
-//        EndProductsTable();
-//        } else {
-//        DisplayNoProdutsMsg();
-//        }
-//        } catch (Exception $e) {
-//        die(print_r($e->getMessage()));
-//        }
-//        GetSearchTerms(!null);
-//        break;
-//        
+
+        /* Retrieve each row as an associative array and display the results. */
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            echo $row['LastName'] . ", " . $row['FirstName'] . "\n";
+        }
+
+        /* Free statement and connection resources. */
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
         ?>
     </body>
 </html>
