@@ -1,42 +1,38 @@
 <!DOCTYPE html>
-<?php require('waConnect.php'); ?>
 <html>
     <head>
-        <meta charset="UTF-8">
+        <?php require('head.php');?>
+        <?php require('func.php');?>
         <title></title>
     </head>
     <body>
-        <!--        <form>
-                    <input type="button" onclick="personInfo()"/>
+        <?php require('header.php'); ?>
+
+
+        <!--        <form action="func.php" method="post">
+                    <label>Client Attendance Login:  </label>
+                    <br>
+                    <input type="hidden" name ="action" value ="clientLogin">
+                    <input type="text" name="lastName" placeholder="Last Name">
+                    <input type="text" name="ssn" placeholder="Last 4 of SSN"> 
+                    <input type="submit" name="submit" value="Submit"/>
                 </form>-->
-        <?php
-        /* Set up and execute the query. */
-        $tsql = "SELECT [PersonID]
-      ,[FirstName]
-      ,[MiddleName]
-      ,[LastName]
-      ,[Suffix]
-      ,[DateOfBirth]
-      ,[DateOfDeath]
-      ,[Active]
-      ,[Prefix]
-       FROM [beta_torresmartinez].[PersonModule].[Person]
-       WHERE [PersonID] = 29";
 
-        $stmt = sqlsrv_query($conn, $tsql);
-        if ($stmt === false) {
-            echo "Error in query preparation/execution.\n";
-            die(print_r(sqlsrv_errors(), true));
-        }
 
-        /* Retrieve each row as an associative array and display the results. */
-        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            echo $row['LastName'] . ", " . $row['FirstName'] . "\n";
-        }
+        <form id='login' action='func.php' method='post' accept-charset='UTF-8'>
+            <fieldset >
+                <legend>Client Attendance Login:</legend>
+                <input type='hidden' name='submitted' id='submitted' value='1'/>
 
-        /* Free statement and connection resources. */
-        sqlsrv_free_stmt($stmt);
-        sqlsrv_close($conn);
-        ?>
+                <label for='lastName' >Last Name*:</label>
+                <input type='text' name='lastName' id='lastName'  maxlength="50" />
+
+                <label for='ssn' >Last 4 of SSN*:</label>
+                <input type='ssn' name='ssn' id='ssn' maxlength="50" />
+
+                <input type='submit' name='Submit' value='Submit' />
+
+            </fieldset>
+        </form>        
     </body>
 </html>
