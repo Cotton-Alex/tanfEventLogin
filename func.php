@@ -9,32 +9,47 @@ if ($action == NULL) {
         $error = 'Something went terribly wrong.';
         include('error.php');
     }
-
-    function Login() {
-        if (empty($_POST['lastName'])) {
-            $this->HandleError("Last Name is empty!");
-            return false;
-        }
-
-        if (empty($_POST['ssn'])) {
-            $this->HandleError("Last 4 of SSN is empty!");
-            return false;
-        }
-
-        $lastName = trim($_POST['lastName']);
-        $ssn = trim($_POST['ssn']);
-
-        if (!$this->CheckLoginInDB($lastName, $ssn)) {
-            return false;
-        }
-
-        session_start();
-
-        $_SESSION[$this->GetLoginSessionVar()] = $lastName;
-
-        return true;
+     if ($action == 'getEventName') {
+         console.log("inside getEventName");
+        $eventNumber = filter_input(INPUT_POST, 'eventNumber', FILTER_VALIDATE_INT);
+        $eventType = filter_input(INPUT_POST, 'eventType', FILTER_VALIDATE_INT);
+        echo("eventNumber = " . $eventNumber);
+        echo("eventType = " . $eventType);
+        include('error.php');
+//        if (empty($_POST['eventNumber'])) {
+//            $this->HandleError("Last Name is empty!");
+//            return false;
+//        }
+//        if (empty($_POST['eventType'])) {
+//            $this->HandleError("Last Name is empty!");
+//            return false;
+//        }
     }
 
+//    function Login() {
+//        if (empty($_POST['lastName'])) {
+//            $this->HandleError("Last Name is empty!");
+//            return false;
+//        }
+//
+//        if (empty($_POST['ssn'])) {
+//            $this->HandleError("Last 4 of SSN is empty!");
+//            return false;
+//        }
+//
+//        $lastName = trim($_POST['lastName']);
+//        $ssn = trim($_POST['ssn']);
+//
+//        if (!$this->CheckLoginInDB($lastName, $ssn)) {
+//            return false;
+//        }
+//
+//        session_start();
+//
+//        $_SESSION[$this->GetLoginSessionVar()] = $lastName;
+//
+//        return true;
+//    }
 //    if ($action == 'change_date') {
 //        $image_id = filter_input(INPUT_GET, 'image_id', FILTER_VALIDATE_INT);
 //        $journal_id = filter_input(INPUT_GET, 'journal_id', FILTER_VALIDATE_INT);

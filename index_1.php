@@ -9,6 +9,7 @@
     <body>
         <?php require('header.php'); ?>
 
+
         <!--        <form action="func.php" method="post">
                     <label>Client Attendance Login:  </label>
                     <br>
@@ -18,16 +19,18 @@
                     <input type="submit" name="submit" value="Submit"/>
                 </form>-->
 
-        <form action="func.php" method='post'  id="getEventName">
-            <input type="hidden" name="action" value="getEventName">
+
+        <form id='login' action='func.php' method='post' accept-charset='UTF-8'>
             <fieldset >
-                <legend>Event:</legend>
-                <label for='eventNumber' >Event Number:</label>
-                <input type='text' name='eventNumber' id='eventNumber'  maxlength="10" />
-                <select name="eventType" id="eventType">
-			<option value="1">Single Event</option>
-                        <option value="2">Multi-session Event</option>
-		</select> 
+                <legend>Client Attendance Login:</legend>
+                <input type='hidden' name='submitted' id='submitted' value='1'/>
+
+                <label for='lastName' >Last Name*:</label>
+                <input type='text' name='lastName' id='lastName'  maxlength="50" />
+
+                <label for='ssn' >Last 4 of SSN*:</label>
+                <input type='ssn' name='ssn' id='ssn' maxlength="50" />
+
                 <input type='submit' name='Submit' value='Submit' />
 
             </fieldset>
