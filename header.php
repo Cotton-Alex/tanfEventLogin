@@ -1,6 +1,6 @@
 <?php
 
-echo("header loaded");
+echo("header loaded </br>");
 
 ?>
 

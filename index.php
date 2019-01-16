@@ -3,7 +3,6 @@
 <html>
     <head>
         <?php require('head.php'); ?>
-        <?php require('func.php'); ?>
         <title></title>
     </head>
     <body>

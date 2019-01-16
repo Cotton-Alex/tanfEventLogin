@@ -1,16 +1,27 @@
 <?php
-
+echo "inside func.php </br>";
 require('waConnect.php');
 
 $action = filter_input(INPUT_POST, 'action');
+$eventNumber = filter_input(INPUT_POST, 'eventNumber');
+$eventType = filter_input(INPUT_POST, 'eventType');
+echo $action;
+echo "</br>";
+echo $eventNumber;
+echo "</br>";
+echo $eventType;
+echo "</br>";
+
 if ($action == NULL) {
+    echo "POST == NULL </br>";
     $action = filter_input(INPUT_GET, 'action');
     if ($action == NULL) {
+        echo "GET == NULL </br>";
         $error = 'Something went terribly wrong.';
         include('error.php');
     }
-     if ($action == 'getEventName') {
-         console.log("inside getEventName");
+     if ($action == "getEventName") {
+        echo "inside getEventName </br>";
         $eventNumber = filter_input(INPUT_POST, 'eventNumber', FILTER_VALIDATE_INT);
         $eventType = filter_input(INPUT_POST, 'eventType', FILTER_VALIDATE_INT);
         echo("eventNumber = " . $eventNumber);
