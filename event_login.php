@@ -3,22 +3,13 @@
 <html>
     <head>
         <?php require('head.php'); ?>
-        <title></title>
+        <title>Event Login</title>
     </head>
     <body>
         <?php require('header.php'); ?>
 
-        <!--        <form action="func.php" method="post">
-                    <label>Client Attendance Login:  </label>
-                    <br>
-                    <input type="hidden" name ="action" value ="clientLogin">
-                    <input type="text" name="lastName" placeholder="Last Name">
-                    <input type="text" name="ssn" placeholder="Last 4 of SSN"> 
-                    <input type="submit" name="submit" value="Submit"/>
-                </form>-->
-
         <form action="index.php" method='post'  id="getEventName">
-            <input type="hidden" name="action" value="clientLogin">
+            <input type="hidden" name="action" value="getEventName">
             <fieldset >
                 <legend>Event:</legend>
                 <label for='eventNumber' >Event Number:</label>
@@ -30,6 +21,7 @@
                 <input type='submit' name='Submit' value='Submit' />
 
             </fieldset>
-        </form>        
+        </form>
+        
     </body>
 </html>

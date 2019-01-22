@@ -15,6 +15,7 @@
             <input type="button" onclick="personInfo()"/>
         </form>
         <?php
+        require('waConnect.php');
         $tsql = "SELECT P.[LastName]
                 ,P.[FirstName]
                   FROM [beta_torresmartinez].[PersonModule].[Person] P

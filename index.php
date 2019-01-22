@@ -3,16 +3,6 @@
 echo "inside func.php </br>";
 require('waConnect.php');
 
-//$action = filter_input(INPUT_POST, 'action');
-//$eventNumber = filter_input(INPUT_POST, 'eventNumber');
-//$eventType = filter_input(INPUT_POST, 'eventType');
-//echo $action;
-//echo "</br>";
-//echo $eventNumber;
-//echo "</br>";
-//echo $eventType;
-//echo "</br>";
-
 $action = filter_input(INPUT_POST, 'action');
 if ($action == NULL) {
     echo "POST == NULL </br>";
@@ -24,13 +14,19 @@ if ($action == NULL) {
 }
 if  ($action == "staffLogin") {
     echo "inside staffLogin </br>";
-    include ('staffLogin.php');
+    include ('staff_login.php');
+    
+} else if ($action == "verifyEmployee") {
+    echo "inside verifyEmployee </br>";
+    $lastName = filter_input(INPUT_POST, 'lastName', FILTER_VALIDATE_INT);
+    $idNumber = filter_input(INPUT_POST, 'idNumber', FILTER_VALIDATE_INT);
     
 } else if ($action == "getEventName") {
     echo "inside getEventName </br>";
     $eventNumber = filter_input(INPUT_POST, 'eventNumber', FILTER_VALIDATE_INT);
     $eventType = filter_input(INPUT_POST, 'eventType', FILTER_VALIDATE_INT);
     echo("eventNumber = " . $eventNumber);
+    echo("<br>");
     echo("eventType = " . $eventType);
     include('error.php');
     if (empty($_POST['eventNumber'])) {
@@ -78,7 +74,7 @@ if  ($action == "staffLogin") {
     $right_page_entries = get_right_page_entries_by_image_id($image_id);
     include('read_entries.php');
     
-}else if ($action === 'clientLogin') {
+}else if ($action == 'clientLogin') {
     echo "inside clientLogin </br>";
     $tsql = "SELECT P.[LastName]
                 ,P.[FirstName]
