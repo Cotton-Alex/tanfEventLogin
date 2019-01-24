@@ -22,6 +22,6 @@ if ($stmt === false) {
 $row = sqlsrv_fetch_array($stmt);
 echo "User login: " . $row[0] . "</br>";
 /* Free statement and connection resources. */
-sqlsrv_free_stmt($stmt);
-sqlsrv_close($conn);
+//sqlsrv_free_stmt($stmt);
+//sqlsrv_close($conn);
 ?>

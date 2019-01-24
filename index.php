@@ -1,7 +1,7 @@
 <?php
 
 echo "inside func.php </br>";
-require('waConnect.php');
+require('model.php');
 
 $action = filter_input(INPUT_POST, 'action');
 if ($action == NULL) {
@@ -20,6 +20,7 @@ if  ($action == "staffLogin") {
     echo "inside verifyEmployee </br>";
     $lastName = filter_input(INPUT_POST, 'lastName', FILTER_VALIDATE_INT);
     $idNumber = filter_input(INPUT_POST, 'idNumber', FILTER_VALIDATE_INT);
+    staff_login($lastName, $idNumber);
     
 } else if ($action == "getEventName") {
     echo "inside getEventName </br>";
