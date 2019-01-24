@@ -18,8 +18,8 @@ if  ($action == "staffLogin") {
     
 } else if ($action == "verifyEmployee") {
     echo "inside verifyEmployee </br>";
-    $lastName = filter_input(INPUT_POST, 'lastName', FILTER_VALIDATE_INT);
-    $idNumber = filter_input(INPUT_POST, 'idNumber', FILTER_VALIDATE_INT);
+    $lastName = filter_input(INPUT_POST, 'lastName');
+    $idNumber = filter_input(INPUT_POST, 'idNumber');
     staff_login($lastName, $idNumber);
     
 } else if ($action == "getEventName") {
