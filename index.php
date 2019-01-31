@@ -1,29 +1,22 @@
 <?php
-
-echo "inside func.php </br>";
 require('model.php');
 
 $action = filter_input(INPUT_POST, 'action');
 if ($action == NULL) {
-    echo "POST == NULL </br>";
     $action = filter_input(INPUT_GET, 'action');
     if ($action == NULL) {
-        echo "GET == NULL </br>";
         $action = 'staffLogin';
     }
 }
 if  ($action == "staffLogin") {
-    echo "inside staffLogin </br>";
     include ('staff_login.php');
     
 } else if ($action == "verifyEmployee") {
-    echo "inside verifyEmployee </br>";
     $lastName = filter_input(INPUT_POST, 'lastName');
     $idNumber = filter_input(INPUT_POST, 'idNumber');
     staff_login($lastName, $idNumber);
     
 } else if ($action == "getEventName") {
-    echo "inside getEventName </br>";
     $eventNumber = filter_input(INPUT_POST, 'eventNumber', FILTER_VALIDATE_INT);
     $eventType = filter_input(INPUT_POST, 'eventType', FILTER_VALIDATE_INT);
     echo("eventNumber = " . $eventNumber);
@@ -40,7 +33,6 @@ if  ($action == "staffLogin") {
     }
     
 } else if ($action == "login") {
-    echo "inside login </br>";
     if (empty($_POST['lastName'])) {
         $this->HandleError("Last Name is empty!");
         return false;
@@ -59,7 +51,6 @@ if  ($action == "staffLogin") {
     return true;
     
 } else if ($action == 'change_date') {
-    echo "inside change_date </br>";
     $image_id = filter_input(INPUT_GET, 'image_id', FILTER_VALIDATE_INT);
     $journal_id = filter_input(INPUT_GET, 'journal_id', FILTER_VALIDATE_INT);
     if ($image_id == NULL || $image_id == FALSE) {
@@ -76,7 +67,6 @@ if  ($action == "staffLogin") {
     include('read_entries.php');
     
 }else if ($action == 'clientLogin') {
-    echo "inside clientLogin </br>";
     $tsql = "SELECT P.[LastName]
                 ,P.[FirstName]
                   FROM [beta_torresmartinez].[PersonModule].[Person] P
