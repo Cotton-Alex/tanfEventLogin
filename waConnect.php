@@ -1,7 +1,7 @@
 <?php
 /* Specify the server and connection string attributes. */
-//$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+//$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
 $connectionInfo = array("Database" => "beta_torresmartinez");
 
 /* Connect using Windows Authentication. */
