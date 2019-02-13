@@ -32,22 +32,33 @@ function staff_login($lastName, $idNumber) {
         die(print_r(sqlsrv_errors(), true));
     }
     $id = sqlsrv_get_field($stmt, 0);
-    $firstName = sqlsrv_get_field($stmt, 1);
-    $dbLastName = sqlsrv_get_field($stmt, 2);
-    if ($lastName === $dbLastName) {
+    $dbStaffFirstName = sqlsrv_get_field($stmt, 1);
+    $dbStaffLastName = sqlsrv_get_field($stmt, 2);
+    if ($lastName === $dbStaffLastName) {
         include ('event_login.php');
     }
     sqlsrv_close($conn);
 }
 
 function event_info($evendId, $eventType) {
-    $conn = db();
-    $sql = "SELECT [StaffID]
-        ,[FirstName]
-        ,[LastName]
-        FROM [beta_torresmartinez].[StaffModule].[Staff]
-        WHERE [StaffID] = " . $idNumber;
-    $stmt = sqlsrv_query($conn, $sql);
+    if ($eventType === 1) {
+        $conn = db();
+        $sql = "SELECT [TANFOneTimeEventManagementID] 
+      ,[EventName]
+      ,[EventDate]
+      FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement]
+      WHERE [TANFOneTimeEventManagementID] = " . $evendId;
+        $stmt = sqlsrv_query($conn, $sql);
+    }
+    if ($eventType === 2) {
+        $conn = db();
+        $sql = "SELECT [TANFMultipleSessionEventID]
+      ,[EventName]
+      ,[SubmittedByID]
+      FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[TANFMultipleSessionEvent]
+      WHERE [TANFMultipleSessionEventID] = " . $evendId;
+        $stmt = sqlsrv_query($conn, $sql);
+    }
     if ($stmt == false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
@@ -56,12 +67,35 @@ function event_info($evendId, $eventType) {
         die(print_r(sqlsrv_errors(), true));
     }
     $id = sqlsrv_get_field($stmt, 0);
-    $firstName = sqlsrv_get_field($stmt, 1);
-    $dbLastName = sqlsrv_get_field($stmt, 2);
-    
-    if ($lastName === $dbLastName) {
-        include ('event_login.php');
+    $eventName = sqlsrv_get_field($stmt, 1);
+    $eventDate = sqlsrv_get_field($stmt, 2);
+
+    include ('client_login.php');
+
+    sqlsrv_close($conn);
+}
+
+function client_login($clientLastName, $clientSSN) {
+    $conn = db();
+    $sql = "SELECT P.[LastName]
+    ,P.[FirstName]
+    FROM [beta_torresmartinez].[PersonModule].[Person] P
+    JOIN [beta_torresmartinez].[PersonSSNModule].[Person] S
+    ON P.[PersonID] = S.[PersonID]
+    WHERE RIGHT(SSN,4) = " . $clientSSN;
+
+    $stmt = sqlsrv_query($conn, $sql);
+    if ($stmt === false) {
+        echo "Error in query preparation/execution.\n";
+        die(print_r(sqlsrv_errors(), true));
     }
-    
+
+    /* Retrieve each row as an associative array and display the results. */
+    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+        echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n";
+    }
+
+    /* Free statement and connection resources. */
+    sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
 }

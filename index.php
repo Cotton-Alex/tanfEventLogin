@@ -17,38 +17,34 @@ if  ($action == "staffLogin") {
     staff_login($lastName, $idNumber);
     
 } else if ($action == "getEventName") {
-    $eventNumber = filter_input(INPUT_POST, 'eventNumber', FILTER_VALIDATE_INT);
+    $eventId = filter_input(INPUT_POST, 'eventId', FILTER_VALIDATE_INT);
     $eventType = filter_input(INPUT_POST, 'eventType', FILTER_VALIDATE_INT);
-    echo("eventNumber = " . $eventNumber);
+    echo("eventId = " . $eventId);
     echo("<br>");
     echo("eventType = " . $eventType);
-    include('error.php');
-    if (empty($_POST['eventNumber'])) {
-        $this->HandleError("Last Name is empty!");
+    //include('error.php');
+    if (empty($_POST['eventId'])) {
+        $this->HandleError("Event ID is empty!");
         return false;
     }
     if (empty($_POST['eventType'])) {
-        $this->HandleError("Last Name is empty!");
+        $this->HandleError("Event type is empty!");
         return false;
     }
+    event_info($eventId, $eventType);
     
-} else if ($action == "login") {
-    if (empty($_POST['lastName'])) {
-        $this->HandleError("Last Name is empty!");
+} else if ($action == "clientLogin") {
+    $clientLastName = filter_input(INPUT_POST, 'clientLastName');
+    $clientSSN = filter_input(INPUT_POST, 'idNumber');
+    if (empty($_POST['clientLastName'])) {
+        $this->HandleError("Last name is empty!");
         return false;
     }
-    if (empty($_POST['ssn'])) {
-        $this->HandleError("Last 4 of SSN is empty!");
+    if (empty($_POST['clientSSN'])) {
+        $this->HandleError("SSN is empty!");
         return false;
     }
-    $lastName = trim($_POST['lastName']);
-    $ssn = trim($_POST['ssn']);
-    if (!$this->CheckLoginInDB($lastName, $ssn)) {
-        return false;
-    }
-    session_start();
-    $_SESSION[$this->GetLoginSessionVar()] = $lastName;
-    return true;
+    client_login($clientLastName, $clientSSN);
     
 } else if ($action == 'change_date') {
     $image_id = filter_input(INPUT_GET, 'image_id', FILTER_VALIDATE_INT);
@@ -65,25 +61,6 @@ if  ($action == "staffLogin") {
     $left_page_entries = get_left_page_entries_by_image_id($image_id);
     $right_page_entries = get_right_page_entries_by_image_id($image_id);
     include('read_entries.php');
-    
-}else if ($action == 'clientLogin') {
-    $tsql = "SELECT P.[LastName]
-                ,P.[FirstName]
-                  FROM [beta_torresmartinez].[PersonModule].[Person] P
-                  JOIN [beta_torresmartinez].[PersonSSNModule].[Person] S
-                  ON P.[PersonID] = S.[PersonID]
-                  WHERE RIGHT(SSN,4) = " . $_POST["ssn"];
-
-    $stmt = sqlsrv_query($conn, $tsql);
-    if ($stmt == false) {
-        echo "Error in query preparation/execution.\n";
-        die(print_r(sqlsrv_errors(), true));
-    }
-
-    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        $echo = "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n";
-        include('error.php');
-    }
 }
 //sqlsrv_free_stmt($stmt);
 //sqlsrv_close($conn);
