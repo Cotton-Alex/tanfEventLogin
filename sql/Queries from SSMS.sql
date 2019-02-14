@@ -28,6 +28,17 @@ SELECT [PersonID]
   FROM [beta_torresmartinez].[PersonSSNModule].[Person]
 
 
+SELECT P.[LastName]
+    ,P.[FirstName]
+    ,S.[PersonID]
+    ,H.[HouseholdID]
+    FROM [beta_torresmartinez].[PersonModule].[Person] P
+    JOIN [beta_torresmartinez].[PersonSSNModule].[Person] S
+    ON P.[PersonID] = S.[PersonID]
+    JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
+    ON P.[PersonID] = H.[PersonID]
+    WHERE RIGHT(SSN,4) =
+
 
 -- STAFF ===============================================
 

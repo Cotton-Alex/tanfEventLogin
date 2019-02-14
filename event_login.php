@@ -7,7 +7,7 @@
     </head>
     <body>
         <?php require('header.php'); ?>
-        
+
         <p> Hi <?php echo $dbStaffFirstName ?>, please select your event.</p>
 
         <form action="index.php" method='post'  id="getEventName">
@@ -17,13 +17,13 @@
                 <label for='eventId' >Event Number:</label>
                 <input type='text' name='eventId' id='eventId'  maxlength="10" />
                 <select name="eventType" id="eventType">
-			<option value="1">Single Event</option>
-                        <option value="2">Multi-session Event</option>
-		</select> 
+                    <option value="1">Single Event</option>
+                    <option value="2">Multi-session Event</option>
+                </select> 
                 <input type='submit' name='Submit' value='Submit' />
 
             </fieldset>
         </form>
-        
+
     </body>
 </html>

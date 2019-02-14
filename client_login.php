@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <?php require('head.php');?>
+        <?php require('head.php'); ?>
         <title></title>
     </head>
     <body>
-        <?php require('header.php');?>
+        <?php require('header.php'); ?>
         <h3> WELCOME TO </h3>
         <h1><?php echo $eventName ?></h1>
 
@@ -21,6 +21,6 @@
                 <input type='submit' name='Submit' value='Submit' />
             </fieldset>
         </form>
-        
+
     </body>
 </html>

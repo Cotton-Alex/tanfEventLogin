@@ -1,4 +1,5 @@
 <?php
+
 require('model.php');
 
 $action = filter_input(INPUT_POST, 'action');
@@ -8,14 +9,12 @@ if ($action == NULL) {
         $action = 'staffLogin';
     }
 }
-if  ($action == "staffLogin") {
+if ($action == "staffLogin") {
     include ('staff_login.php');
-    
 } else if ($action == "verifyEmployee") {
     $lastName = filter_input(INPUT_POST, 'lastName');
     $idNumber = filter_input(INPUT_POST, 'idNumber');
     staff_login($lastName, $idNumber);
-    
 } else if ($action == "getEventName") {
     $eventId = filter_input(INPUT_POST, 'eventId', FILTER_VALIDATE_INT);
     $eventType = filter_input(INPUT_POST, 'eventType', FILTER_VALIDATE_INT);
@@ -32,7 +31,6 @@ if  ($action == "staffLogin") {
         return false;
     }
     event_info($eventId, $eventType);
-    
 } else if ($action == "clientLogin") {
     $clientLastName = filter_input(INPUT_POST, 'clientLastName');
     $clientSSN = filter_input(INPUT_POST, 'clientSSN');
@@ -45,7 +43,6 @@ if  ($action == "staffLogin") {
         return false;
     }
     client_login($clientLastName, $clientSSN);
-    
 } else if ($action == 'change_date') {
     $image_id = filter_input(INPUT_GET, 'image_id', FILTER_VALIDATE_INT);
     $journal_id = filter_input(INPUT_GET, 'journal_id', FILTER_VALIDATE_INT);
