@@ -5,11 +5,11 @@
 
 function db() {
     // TODO: Is there a more secure way to connect to the db?
-    $serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-    //$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+    //$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+    $serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
-    if ($conn === false) {
+    if ($conn == false) {
         echo "Conn error\n";
         die(print_r(sqlsrv_errors(), true));
     }
@@ -28,7 +28,7 @@ function staff_login($lastName, $idNumber) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
-    if (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
+    if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
         die(print_r(sqlsrv_errors(), true));
     }
     $id = sqlsrv_get_field($stmt, 0);
@@ -37,6 +37,7 @@ function staff_login($lastName, $idNumber) {
     if ($lastName === $dbStaffLastName) {
         include ('event_login.php');
     }
+    sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
 }
 
@@ -63,15 +64,16 @@ function event_info($evendId, $eventType) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
-    if (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
+    if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
         die(print_r(sqlsrv_errors(), true));
     }
+    
     $id = sqlsrv_get_field($stmt, 0);
     $eventName = sqlsrv_get_field($stmt, 1);
     $eventDate = sqlsrv_get_field($stmt, 2);
 
     include ('client_login.php');
-
+    sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
 }
 
@@ -79,21 +81,33 @@ function client_login($clientLastName, $clientSSN) {
     $conn = db();
     $sql = "SELECT P.[LastName]
     ,P.[FirstName]
+    ,S.[PersonID]
     FROM [beta_torresmartinez].[PersonModule].[Person] P
     JOIN [beta_torresmartinez].[PersonSSNModule].[Person] S
     ON P.[PersonID] = S.[PersonID]
     WHERE RIGHT(SSN,4) = " . $clientSSN;
-
     $stmt = sqlsrv_query($conn, $sql);
-    if ($stmt === false) {
+    
+    if ($stmt == false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
+    if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
+        die(print_r(sqlsrv_errors(), true));
+    }
+    $dbClientLastName = sqlsrv_get_field($stmt, 0);
+    $dbClientFirstName = sqlsrv_get_field($stmt, 1);
+    $dbPersonId = sqlsrv_get_field($stmt, 2);
+    
+    if ($clientLastName === $dbClientLastName) {
+        //include ('event_login.php');
+        echo $dbClientFirstName . " " . $dbClientLastName . " PersonId = " . $dbPersonId;
+    }
 
     /* Retrieve each row as an associative array and display the results. */
-    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n";
-    }
+    //while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    //    echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n";
+    //}
 
     /* Free statement and connection resources. */
     sqlsrv_free_stmt($stmt);

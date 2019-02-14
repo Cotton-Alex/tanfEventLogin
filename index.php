@@ -35,7 +35,7 @@ if  ($action == "staffLogin") {
     
 } else if ($action == "clientLogin") {
     $clientLastName = filter_input(INPUT_POST, 'clientLastName');
-    $clientSSN = filter_input(INPUT_POST, 'idNumber');
+    $clientSSN = filter_input(INPUT_POST, 'clientSSN');
     if (empty($_POST['clientLastName'])) {
         $this->HandleError("Last name is empty!");
         return false;

@@ -11,9 +11,9 @@
         <h1><?php echo $eventName ?></h1>
 
         <form action="index.php" method='post'  id="clientLogin">
-            <input type="hidden" name="action" value="verifyEmployee">
+            <input type="hidden" name="action" value="clientLogin">
             <fieldset >
-                <legend>Employee Login:</legend>
+                <legend>Client Login:</legend>
                 <label for='clientLastName' >Last Name:</label>
                 <input type='text' name='clientLastName' id='clientLastName'  maxlength="30" />
                 <label for='clientSSN' >Last 4 of SSN:</label>
