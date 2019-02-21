@@ -1,4 +1,5 @@
 <?php
+//TODO: stop browser from remembering field inputs
 
 require('model.php');
 

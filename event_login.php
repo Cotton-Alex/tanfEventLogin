@@ -1,4 +1,5 @@
 <?php session_start() ?>
+//TODO: save event info in session
 <!DOCTYPE html>
 <html>
     <head>

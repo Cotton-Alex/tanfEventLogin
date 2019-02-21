@@ -1,12 +1,11 @@
 <?php
 
 //http://php.net/manual/en/ref.sqlsrv.php
-//require('waConnect.php');
 
 function db() {
     // TODO: Is there a more secure way to connect to the db?
-    $serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-    //$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+    //$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+    $serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
     if ($conn == false) {
@@ -126,12 +125,9 @@ function household_members($dbHouseholdId) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
-    if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
-        die(print_r(sqlsrv_errors(), true));
-    }
     /* Retrieve each row as an associative array and display the results. */
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n";
+        echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";
     }
     /* Free statement and connection resources. */
     sqlsrv_free_stmt($stmt);

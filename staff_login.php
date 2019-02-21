@@ -1,4 +1,5 @@
 <?php session_start() ?>
+//TODO: save staff name in session
 <!DOCTYPE html>
 <html>
     <head>
