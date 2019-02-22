@@ -13,16 +13,20 @@ if ($action == NULL) {
 }
 if ($action == "staffLogin") {
     include ('staff_login.php');
+    
+    
 } else if ($action == "verifyEmployee") {
     $lastName = filter_input(INPUT_POST, 'lastName');
     $idNumber = filter_input(INPUT_POST, 'idNumber');
     staff_login($lastName, $idNumber);
+    
+    
 } else if ($action == "getEventName") {
     $eventId = filter_input(INPUT_POST, 'eventId', FILTER_VALIDATE_INT);
     $eventType = filter_input(INPUT_POST, 'eventType', FILTER_VALIDATE_INT);
-    echo("eventId = " . $eventId);
-    echo("<br>");
-    echo("eventType = " . $eventType);
+//    echo("eventId = " . $eventId);
+//    echo("<br>");
+//    echo("eventType = " . $eventType);
     //include('error.php');
     if (empty($_POST['eventId'])) {
         $this->HandleError("Event ID is empty!");
@@ -33,9 +37,11 @@ if ($action == "staffLogin") {
         return false;
     }
     event_info($eventId, $eventType);
-} else if ($action == "clientLogin") {
+
+}  else if ($action == "clientLogin") {
     $clientLastName = filter_input(INPUT_POST, 'clientLastName');
     $clientSSN = filter_input(INPUT_POST, 'clientSSN');
+//    echo ("1 <br>");
     if (empty($_POST['clientLastName'])) {
         $this->HandleError("Last name is empty!");
         return false;
@@ -44,8 +50,37 @@ if ($action == "staffLogin") {
         $this->HandleError("SSN is empty!");
         return false;
     }
+//    echo ("2 <br>");
     client_login($clientLastName, $clientSSN);
-} else if ($action == 'change_date') {
+    echo ("11 <br>");
+    echo ($dbHouseholdId);
+    echo ("12 <br>");
+    $action = 'client_attendance';
+    
+//}else if ($action == 'client_attendance') {
+//    echo ($action);
+    $dbHouseholdId = $_SESSION["dbHouseholdId"];
+    $householdMembers = get_household_members($dbHouseholdId);
+    include ('client_attendance.php');
+}
+
+  
+//} else if ($action == "clientLogin") {
+//    $clientLastName = filter_input(INPUT_POST, 'clientLastName');
+//    $clientSSN = filter_input(INPUT_POST, 'clientSSN');
+//    if (empty($_POST['clientLastName'])) {
+//        $this->HandleError("Last name is empty!");
+//        return false;
+//    }
+//    if (empty($_POST['clientSSN'])) {
+//        $this->HandleError("SSN is empty!");
+//        return false;
+//    }
+//    client_login($clientLastName, $clientSSN);
+//    
+//    
+//} 
+else if ($action == 'change_date') {
     $image_id = filter_input(INPUT_GET, 'image_id', FILTER_VALIDATE_INT);
     $journal_id = filter_input(INPUT_GET, 'journal_id', FILTER_VALIDATE_INT);
     if ($image_id == NULL || $image_id == FALSE) {
@@ -63,3 +98,5 @@ if ($action == "staffLogin") {
 }
 //sqlsrv_free_stmt($stmt);
 //sqlsrv_close($conn);
+
+

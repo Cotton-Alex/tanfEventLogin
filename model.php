@@ -4,8 +4,8 @@
 
 function db() {
     // TODO: Is there a more secure way to connect to the db?
-    //$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-    $serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+    $serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+    //$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
     if ($conn == false) {
@@ -77,6 +77,7 @@ function event_info($evendId, $eventType) {
 }
 
 function client_login($clientLastName, $clientSSN) {
+//    echo ("3 <br>");
     $conn = db();
     $sql = "SELECT P.[LastName]
         ,P.[FirstName]
@@ -89,7 +90,7 @@ function client_login($clientLastName, $clientSSN) {
         ON P.[PersonID] = H.[PersonID]
         WHERE RIGHT(SSN,4) = " . $clientSSN;
     $stmt = sqlsrv_query($conn, $sql);
-
+//echo ("4 <br>");
     if ($stmt == false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
@@ -97,6 +98,7 @@ function client_login($clientLastName, $clientSSN) {
     if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
         die(print_r(sqlsrv_errors(), true));
     }
+//    echo ("5 <br>");
     $dbClientLastName = sqlsrv_get_field($stmt, 0);
     $dbClientFirstName = sqlsrv_get_field($stmt, 1);
     $dbPersonId = sqlsrv_get_field($stmt, 2);
@@ -105,14 +107,20 @@ function client_login($clientLastName, $clientSSN) {
     if ($clientLastName === $dbClientLastName) {
         $_SESSION["dbHouseholdId"] = $dbHouseholdId;
         echo "Session variable dbHouseholdId = " . $_SESSION["dbHouseholdId"] . "<br>";
-        household_members($dbHouseholdId);
+        //household_members($dbHouseholdId);
+//        echo ("6 <br>");
     }
-
+//    echo ("7 <br>");
     sqlsrv_free_stmt($stmt);
+//    echo ("8 <br>");
     sqlsrv_close($conn);
+//    echo ("9 <br>");
+//    echo ($dbHouseholdId);
+//    echo ("10 <br>");
+    return;// $dbHouseholdId;
 }
 
-function household_members($dbHouseholdId) {
+function get_household_members($dbHouseholdId) {
     $conn = db();
     $sql = "SELECT P.[LastName]
         ,P.[FirstName]
@@ -121,17 +129,40 @@ function household_members($dbHouseholdId) {
         JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
         ON P.[PersonID] = H.[PersonID]
         WHERE [HouseholdID] = " . $dbHouseholdId;
-    $stmt = sqlsrv_query($conn, $sql);
+    $stmt = sqlsrv_prepare($conn, $sql);
+    $stmt->bindValue(":HouseholdID", $dbHouseholdId);
+    $stmt->sqlsrv_execute();
+    $householdMembers = $stmt->sqlsrv_fetch();
     if ($stmt == false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
-    
-    /* Retrieve each row as an associative array and display the results. */
-    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";
-    }
     /* Free statement and connection resources. */
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
+    return $householdMembers;
 }
+
+//function household_members($dbHouseholdId) {
+//    $conn = db();
+//    $sql = "SELECT P.[LastName]
+//        ,P.[FirstName]
+//        ,P.[PersonID]
+//        FROM [beta_torresmartinez].[PersonModule].[Person] P
+//        JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
+//        ON P.[PersonID] = H.[PersonID]
+//        WHERE [HouseholdID] = " . $dbHouseholdId;
+//    $stmt = sqlsrv_query($conn, $sql);
+//    if ($stmt == false) {
+//        echo "Error in query preparation/execution.\n";
+//        die(print_r(sqlsrv_errors(), true));
+//    }
+//    
+//    /* Retrieve each row as an associative array and display the results. */
+//    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+//        echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";
+//    }
+//    /* Free statement and connection resources. */
+//    sqlsrv_free_stmt($stmt);
+//    sqlsrv_close($conn);
+//}
