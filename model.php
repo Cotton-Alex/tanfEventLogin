@@ -38,7 +38,7 @@ function staff_login($lastName, $idNumber) {
     }
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
-}
+} 
 
 function event_info($evendId, $eventType) {
     if ($eventType === 1) {
@@ -103,7 +103,8 @@ function client_login($clientLastName, $clientSSN) {
     $dbHouseholdId = sqlsrv_get_field($stmt, 3);
 
     if ($clientLastName === $dbClientLastName) {
-        //echo $dbClientFirstName . " " . $dbClientLastName . " PersonId = " . $dbPersonId . " HouseholdId = " . $dbHouseholdId;
+        $_SESSION["dbHouseholdId"] = $dbHouseholdId;
+        echo "Session variable dbHouseholdId = " . $_SESSION["dbHouseholdId"] . "<br>";
         household_members($dbHouseholdId);
     }
 
@@ -125,6 +126,7 @@ function household_members($dbHouseholdId) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
+    
     /* Retrieve each row as an associative array and display the results. */
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";

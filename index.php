@@ -1,3 +1,4 @@
+<?php session_start() ?>
 <?php
 //TODO: stop browser from remembering field inputs
 

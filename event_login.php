@@ -1,5 +1,5 @@
-<?php session_start() ?>
 //TODO: save event info in session
+// autocomplete='off'
 <!DOCTYPE html>
 <html>
     <head>

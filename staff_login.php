@@ -1,5 +1,5 @@
-<?php session_start() ?>
 //TODO: save staff name in session
+// autocomplete='off'
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,7 +9,7 @@
     <body>
         <?php require('header.php'); ?>
 
-        <form action="index.php" method='post'  id="staffLogin">
+        <form action="index.php" method='post' id="staffLogin">
             <input type="hidden" name="action" value="verifyEmployee">
             <fieldset >
                 <legend>Employee Login:</legend>

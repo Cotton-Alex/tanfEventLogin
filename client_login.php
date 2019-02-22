@@ -1,4 +1,4 @@
-<?php session_start() ?>
+// autocomplete='off'
 <!DOCTYPE html>
 <html>
     <head>
