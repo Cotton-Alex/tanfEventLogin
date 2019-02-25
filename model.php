@@ -38,27 +38,16 @@ function staff_login($lastName, $idNumber) {
     }
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
-} 
+}
 
-function event_info($evendId, $eventType) {
-    if ($eventType === 1) {
-        $conn = db();
-        $sql = "SELECT [TANFOneTimeEventManagementID] 
+function single_event_info($evendId, $eventType) {
+    $conn = db();
+    $sql = "SELECT [TANFOneTimeEventManagementID] 
       ,[EventName]
       ,[EventDate]
       FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement]
       WHERE [TANFOneTimeEventManagementID] = " . $evendId;
-        $stmt = sqlsrv_query($conn, $sql);
-    }
-    if ($eventType === 2) {
-        $conn = db();
-        $sql = "SELECT [TANFMultipleSessionEventID]
-      ,[EventName]
-      ,[SubmittedByID]
-      FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[TANFMultipleSessionEvent]
-      WHERE [TANFMultipleSessionEventID] = " . $evendId;
-        $stmt = sqlsrv_query($conn, $sql);
-    }
+    $stmt = sqlsrv_query($conn, $sql);
     if ($stmt == false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
@@ -66,18 +55,38 @@ function event_info($evendId, $eventType) {
     if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
         die(print_r(sqlsrv_errors(), true));
     }
-
     $id = sqlsrv_get_field($stmt, 0);
     $eventName = sqlsrv_get_field($stmt, 1);
     $eventDate = sqlsrv_get_field($stmt, 2);
+    include ('client_login.php');
+    sqlsrv_free_stmt($stmt);
+    sqlsrv_close($conn);
+}
 
+function multi_event_info($evendId, $eventType) {
+    $conn = db();
+    $sql = "SELECT [TANFMultipleSessionEventID]
+      ,[EventName]
+      ,[SubmittedByID]
+      FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[TANFMultipleSessionEvent]
+      WHERE [TANFMultipleSessionEventID] = " . $evendId;
+    $stmt = sqlsrv_query($conn, $sql);
+    if ($stmt == false) {
+        echo "Error in query preparation/execution.\n";
+        die(print_r(sqlsrv_errors(), true));
+    }
+    if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
+        die(print_r(sqlsrv_errors(), true));
+    }
+    $id = sqlsrv_get_field($stmt, 0);
+    $eventName = sqlsrv_get_field($stmt, 1);
+    $eventDate = sqlsrv_get_field($stmt, 2);
     include ('client_login.php');
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
 }
 
 function client_login($clientLastName, $clientSSN) {
-//    echo ("3 <br>");
     $conn = db();
     $sql = "SELECT P.[LastName]
         ,P.[FirstName]
@@ -90,7 +99,6 @@ function client_login($clientLastName, $clientSSN) {
         ON P.[PersonID] = H.[PersonID]
         WHERE RIGHT(SSN,4) = " . $clientSSN;
     $stmt = sqlsrv_query($conn, $sql);
-//echo ("4 <br>");
     if ($stmt == false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
@@ -98,7 +106,6 @@ function client_login($clientLastName, $clientSSN) {
     if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
         die(print_r(sqlsrv_errors(), true));
     }
-//    echo ("5 <br>");
     $dbClientLastName = sqlsrv_get_field($stmt, 0);
     $dbClientFirstName = sqlsrv_get_field($stmt, 1);
     $dbPersonId = sqlsrv_get_field($stmt, 2);
@@ -106,18 +113,12 @@ function client_login($clientLastName, $clientSSN) {
 
     if ($clientLastName === $dbClientLastName) {
         $_SESSION["dbHouseholdId"] = $dbHouseholdId;
-        echo "Session variable dbHouseholdId = " . $_SESSION["dbHouseholdId"] . "<br>";
-        //household_members($dbHouseholdId);
-//        echo ("6 <br>");
+        //echo "Session variable dbHouseholdId = " . $_SESSION["dbHouseholdId"] . "<br>";
+        //get_household_members($dbHouseholdId);
     }
-//    echo ("7 <br>");
     sqlsrv_free_stmt($stmt);
-//    echo ("8 <br>");
     sqlsrv_close($conn);
-//    echo ("9 <br>");
-//    echo ($dbHouseholdId);
-//    echo ("10 <br>");
-    return;// $dbHouseholdId;
+    return; // $dbHouseholdId;
 }
 
 function get_household_members($dbHouseholdId) {
@@ -129,40 +130,19 @@ function get_household_members($dbHouseholdId) {
         JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
         ON P.[PersonID] = H.[PersonID]
         WHERE [HouseholdID] = " . $dbHouseholdId;
-    $stmt = sqlsrv_prepare($conn, $sql);
-    $stmt->bindValue(":HouseholdID", $dbHouseholdId);
-    $stmt->sqlsrv_execute();
-    $householdMembers = $stmt->sqlsrv_fetch();
+    $stmt = sqlsrv_query($conn, $sql);
     if ($stmt == false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
+    /* Retrieve each row as an associative array and display the results. */
+    
+    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+        //echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";
+        echo ("<input type='radio' name=" . $row['PersonID'] . " id=" . $row['PersonID'] . "  maxlength='3'/> "  . $row['FirstName'] . " " . $row['LastName'] . "<br>");
+    }
     /* Free statement and connection resources. */
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
-    return $householdMembers;
+    return;
 }
-
-//function household_members($dbHouseholdId) {
-//    $conn = db();
-//    $sql = "SELECT P.[LastName]
-//        ,P.[FirstName]
-//        ,P.[PersonID]
-//        FROM [beta_torresmartinez].[PersonModule].[Person] P
-//        JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
-//        ON P.[PersonID] = H.[PersonID]
-//        WHERE [HouseholdID] = " . $dbHouseholdId;
-//    $stmt = sqlsrv_query($conn, $sql);
-//    if ($stmt == false) {
-//        echo "Error in query preparation/execution.\n";
-//        die(print_r(sqlsrv_errors(), true));
-//    }
-//    
-//    /* Retrieve each row as an associative array and display the results. */
-//    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-//        echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";
-//    }
-//    /* Free statement and connection resources. */
-//    sqlsrv_free_stmt($stmt);
-//    sqlsrv_close($conn);
-//}

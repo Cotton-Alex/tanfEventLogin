@@ -14,11 +14,7 @@
             <input type="hidden" name="action" value="clientAttendance">
             <fieldset >
                 <legend>Who is in attendance:</legend>
-                //?php foreach
-                <label for='clientLastName' >Last Name:</label>
-                <input type='text' name='clientLastName' id='clientLastName'  maxlength="30" />
-                <label for='clientSSN' >Last 4 of SSN:</label>
-                <input type='text' name='clientSSN' id='clientSSN'  maxlength="4" />
+                <?php get_household_members($dbHouseholdId); ?>
                 <input type='submit' name='Submit' value='Submit' />
             </fieldset>
         </form>
