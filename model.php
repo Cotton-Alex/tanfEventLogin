@@ -58,6 +58,7 @@ function single_event_info($evendId, $eventType) {
     $id = sqlsrv_get_field($stmt, 0);
     $eventName = sqlsrv_get_field($stmt, 1);
     $eventDate = sqlsrv_get_field($stmt, 2);
+    $_SESSION["eventId"] = $id;
     include ('client_login.php');
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
@@ -81,6 +82,7 @@ function multi_event_info($evendId, $eventType) {
     $id = sqlsrv_get_field($stmt, 0);
     $eventName = sqlsrv_get_field($stmt, 1);
     $eventDate = sqlsrv_get_field($stmt, 2);
+    $_SESSION["eventId"] = $id;
     include ('client_login.php');
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
@@ -139,7 +141,7 @@ function get_household_members($dbHouseholdId) {
     
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         //echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";
-        echo ("<input type='radio' name=" . $row['PersonID'] . " id=" . $row['PersonID'] . "  maxlength='3'/> "  . $row['FirstName'] . " " . $row['LastName'] . "<br>");
+        echo ("<input type='radio' name='clientAttended' value=" . $row['PersonID'] . "  maxlength='3'/> "  . $row['FirstName'] . " " . $row['LastName'] . "<br>");
     }
     /* Free statement and connection resources. */
     sqlsrv_free_stmt($stmt);

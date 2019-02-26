@@ -54,14 +54,18 @@ if ($action == "staffLogin") {
     client_login($clientLastName, $clientSSN);
     //$action = 'client_attendance';
     
-    $dbHouseholdId = $_SESSION["dbHouseholdId"];
+    $sessionHouseholdId = $_SESSION["dbHouseholdId"];
+    $sessionEventId = $_SESSION["eventId"];
 //    $householdMembers = get_household_members($dbHouseholdId);
 //    echo $householdMembers;
+    echo $sessionHouseholdId;
+    echo $sessionEventId; 
     include ('client_attendance.php');
 
 
-}else if ($action == 'client_attendance') {
-    
+}else if ($action == 'clientAttendee') { 
+    $clientAttended = filter_input(INPUT_POST, 'clientAttended');
+    echo $clientAttended;
     
 }
 
