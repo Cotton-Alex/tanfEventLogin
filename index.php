@@ -1,7 +1,7 @@
 <?php session_start() ?>
 <?php
 //TODO: stop browser from remembering field inputs
-
+// confirmation page for clients to double check list before submitting
 require('model.php');
 
 $action = filter_input(INPUT_POST, 'action');
@@ -64,12 +64,17 @@ if ($action == "staffLogin") {
 
 
 }else if ($action == 'clientAttendee') { 
-    $clientAttended = filter_input(INPUT_POST, 'clientAttended');
-    echo $clientAttended;
-    
+    $householdMemberAttended = filter_input(INPUT_POST, 'clientAttended', 
+            FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+    if ($householdMemberAttended !== NULL) {
+        foreach($householdMemberAttended as $key => $value) {
+                echo $key . ' = ' . $value . '<br>';
+        }
+    } else {
+        echo "No household members selected.";
+    }
+
 }
-
-
 
 //} else if ($action == "clientLogin") {
 //    $clientLastName = filter_input(INPUT_POST, 'clientLastName');

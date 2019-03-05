@@ -141,7 +141,7 @@ function get_household_members($dbHouseholdId) {
     
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         //echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";
-        echo ("<input type='radio' name='clientAttended' value=" . $row['PersonID'] . "  maxlength='3'/> "  . $row['FirstName'] . " " . $row['LastName'] . "<br>");
+        echo ("<input type='checkbox' name='clientAttended[]' value=" . $row['PersonID'] . "  maxlength='3'/> "  . $row['FirstName'] . " " . $row['LastName'] . "<br>");
     }
     /* Free statement and connection resources. */
     sqlsrv_free_stmt($stmt);
