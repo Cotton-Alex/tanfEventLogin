@@ -1,5 +1,6 @@
 <?php session_start() ?>
 <?php
+
 //TODO: stop browser from remembering field inputs
 // confirmation page for clients to double check list before submitting
 require('model.php');
@@ -33,14 +34,16 @@ if ($action == "staffLogin") {
         return false;
     }
     if ($eventType == 1) {
+        $_SESSION["eventType"] = $eventType;
         single_event_info($eventId, $eventType);
     }
     if ($eventType == 2) {
+        $_SESSION["eventType"] = $eventType;
         multi_event_info($eventId, $eventType);
     }
     
-
-}  else if ($action == "clientLogin") {
+    
+} else if ($action == "clientLogin") {
     $clientLastName = filter_input(INPUT_POST, 'clientLastName');
     $clientSSN = filter_input(INPUT_POST, 'clientSSN');
     if (empty($_POST['clientLastName'])) {
@@ -53,45 +56,31 @@ if ($action == "staffLogin") {
     }
     client_login($clientLastName, $clientSSN);
     //$action = 'client_attendance';
-    
+
     $sessionHouseholdId = $_SESSION["dbHouseholdId"];
     $sessionEventId = $_SESSION["eventId"];
 //    $householdMembers = get_household_members($dbHouseholdId);
 //    echo $householdMembers;
     echo $sessionHouseholdId;
-    echo $sessionEventId; 
+    echo $sessionEventId;
     include ('client_attendance.php');
-
-
-}else if ($action == 'clientAttendee') { 
-    $householdMemberAttended = filter_input(INPUT_POST, 'clientAttended', 
-            FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+    
+    
+} else if ($action == 'clientAttendee') {
+    $sessionEventType = $_SESSION["eventType"];
+    $sessionEventId = $_SESSION["eventId"];
+    $householdMemberAttended = filter_input(INPUT_POST, 'clientAttended', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
     if ($householdMemberAttended !== NULL) {
-        foreach($householdMemberAttended as $key => $value) {
-                echo $key . ' = ' . $value . '<br>';
+        if ($sessionEventType == 1) {
+            foreach ($householdMemberAttended as $key => $value) {
+                singleEventUpdateAttendance($sessionEventId, $value);
+            }
+        } else if ($sessionEventType == 2) {
+            foreach ($householdMemberAttended as $key => $value) {
+                multiEventUpdateAttendance($sessionEventId, $value);
+            }
         }
     } else {
         echo "No household members selected.";
     }
-
 }
-
-//} else if ($action == "clientLogin") {
-//    $clientLastName = filter_input(INPUT_POST, 'clientLastName');
-//    $clientSSN = filter_input(INPUT_POST, 'clientSSN');
-//    if (empty($_POST['clientLastName'])) {
-//        $this->HandleError("Last name is empty!");
-//        return false;
-//    }
-//    if (empty($_POST['clientSSN'])) {
-//        $this->HandleError("SSN is empty!");
-//        return false;
-//    }
-//    client_login($clientLastName, $clientSSN);
-//    
-//    
-//} 
-//sqlsrv_free_stmt($stmt);
-//sqlsrv_close($conn);
-
-

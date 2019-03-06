@@ -65,8 +65,19 @@ SELECT [OneTimeEventRegistrantID]
   FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant]
 
 
+-- INSERT STATEMENT USED
+INSERT INTO [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] (TANFOneTimeEventManagementID, RegistrantID, Attended) 
+VALUES (19, 24, 1);
+
+
 
 -- MULTI SESSION EVENT =========================================================
+
+-- UPDATE MULTI SESSION EVENT WITH TODAY'S DATE
+INSERT INTO [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] (TANFMultipleSessionEventID, StartDate) 
+VALUES (11, GETDATE());
+
+
 
 SELECT [TANFMultipleSessionEventID]
       ,[EventName]
@@ -88,3 +99,27 @@ SELECT [MultipleSessionEventSessionAttendeeID]
   FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee]
 
 
+
+
+-- CHECK SESSION ATTENDEE TABLE ================================================
+
+-- SINGLE SESSION
+SELECT TOP 1000 [OneTimeEventRegistrantID]
+      ,[TANFOneTimeEventManagementID]
+      ,[RegistrantID]
+      ,[Attended]
+      ,[Notes]
+      ,[Active]
+  FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant]
+  ORDER BY [OneTimeEventRegistrantID] DESC
+
+
+-- MULTI SESSION
+SELECT TOP 1000 [MultipleSessionEventSessionAttendeeID]
+      ,[MultipleSessionEventSessionID]
+      ,[PersonID]
+      ,[Attended]
+      ,[Comment]
+      ,[Active]
+  FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee]
+  ORDER BY [MultipleSessionEventSessionAttendeeID] DESC

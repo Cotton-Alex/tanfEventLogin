@@ -8,7 +8,6 @@
     </head>
     <body>
         <?php require('header.php'); ?>
-
         <form action="index.php" method='post' id="staffLogin">
             <input type="hidden" name="action" value="verifyEmployee">
             <fieldset >
