@@ -40,13 +40,13 @@ function staff_login($lastName, $idNumber) {
     sqlsrv_close($conn);
 }
 
-function single_event_info($evendId, $eventType) {
+function single_event_info($eventId, $eventType) {
     $conn = db();
     $sql = "SELECT [TANFOneTimeEventManagementID] 
       ,[EventName]
       ,[EventDate]
       FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement]
-      WHERE [TANFOneTimeEventManagementID] = " . $evendId;
+      WHERE [TANFOneTimeEventManagementID] = " . $eventId;
     $stmt = sqlsrv_query($conn, $sql);
     if ($stmt == false) {
         echo "Error in query preparation/execution.\n";
@@ -151,7 +151,7 @@ WHERE [HouseholdID] = " . $dbHouseholdId;
     }
     /* Retrieve each row as an associative array and display the results. */
 
-    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_BOTH)) {
 //echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";
         echo ("<input type = 'checkbox' name = 'clientAttended[]' value = " . $row['PersonID'] . " maxlength = '3'/> " . $row['FirstName'] . " " . $row['LastName'] . "<br>");
     }

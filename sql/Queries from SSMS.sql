@@ -73,12 +73,6 @@ VALUES (19, 24, 1);
 
 -- MULTI SESSION EVENT =========================================================
 
--- UPDATE MULTI SESSION EVENT WITH TODAY'S DATE
-INSERT INTO [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] (TANFMultipleSessionEventID, StartDate) 
-VALUES (11, GETDATE());
-
-
-
 SELECT [TANFMultipleSessionEventID]
       ,[EventName]
       ,[SubmittedByID]
@@ -104,6 +98,12 @@ SELECT [MultipleSessionEventSessionAttendeeID]
 -- CHECK SESSION ATTENDEE TABLE ================================================
 
 -- SINGLE SESSION
+
+-- UPDATE MULTI SESSION EVENT WITH TODAY'S DATE
+INSERT INTO [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] (TANFMultipleSessionEventID, StartDate) 
+VALUES (11, GETDATE());
+
+/* OneTimeEventRegistrantID DESC */
 SELECT TOP 1000 [OneTimeEventRegistrantID]
       ,[TANFOneTimeEventManagementID]
       ,[RegistrantID]
@@ -115,6 +115,11 @@ SELECT TOP 1000 [OneTimeEventRegistrantID]
 
 
 -- MULTI SESSION
+
+-- UPDATE MULTI SESSION EVENT WITH TODAY'S DATE
+INSERT INTO [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] (TANFMultipleSessionEventID, StartDate) 
+VALUES (11, GETDATE());
+
 SELECT TOP 1000 [MultipleSessionEventSessionAttendeeID]
       ,[MultipleSessionEventSessionID]
       ,[PersonID]
@@ -123,3 +128,16 @@ SELECT TOP 1000 [MultipleSessionEventSessionAttendeeID]
       ,[Active]
   FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee]
   ORDER BY [MultipleSessionEventSessionAttendeeID] DESC
+
+/* MultiSession Events with most recent on top */
+SELECT TOP 1000 [MultipleSessionEventSessionID]
+      ,[TANFMultipleSessionEventID]
+      ,[StartDate]
+      ,[EndDate]
+      ,[CostOfSession]
+      ,[Description]
+      ,[Comment]
+      ,[StaffID]
+      ,[Active]
+  FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession]
+  ORDER BY [MultipleSessionEventSessionID] DESC

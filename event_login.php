@@ -9,7 +9,9 @@
     <body>
         <?php require('header.php'); ?>
 
-        <p> Hi <?php echo $dbStaffFirstName ?>, please select your event.</p>
+        <!--
+        <p> Hi php echo $dbStaffFirstName , please select your event.</p>
+        -->
 
         <form action="index.php" method='post'  id="getEventName">
             <input type="hidden" name="action" value="getEventName">
