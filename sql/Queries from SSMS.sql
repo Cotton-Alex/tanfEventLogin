@@ -103,6 +103,38 @@ SELECT [MultipleSessionEventSessionAttendeeID]
 INSERT INTO [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] (TANFMultipleSessionEventID, StartDate) 
 VALUES (11, GETDATE());
 
+
+SELECT [TANFCaseID]
+,C.[HouseholdID]
+,M.[PersonID]
+,P.[FirstName]
+,P.[LastName]
+,S.[SSN]
+  FROM [beta_torresmartinez].[TANFCaseModule].[TANFCase] C
+  JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] M
+  ON C.[HouseholdID] = M.[HouseholdID]
+  JOIN [beta_torresmartinez].[PersonModule].[Person] P
+  ON M.[PersonID] = P.[PersonID]
+  JOIN [beta_torresmartinez].[PersonSSNModule].[Person] S
+  ON M.[PersonID] = S.[PersonID]
+  WHERE [TANFCaseID] = 5
+
+/* OneTimeEventRegistrantID for DEBUGGING DESC */
+SELECT TOP 1000 R.[OneTimeEventRegistrantID]
+      ,R.[TANFOneTimeEventManagementID]
+      ,N.[EventName]
+      ,N.[EventDate]
+      ,R.[RegistrantID]
+      ,P.[FirstName]
+      ,P.[LastName]
+      ,R.[Attended]
+  FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] R
+  JOIN [beta_torresmartinez].[PersonModule].[Person] P
+  ON R.[RegistrantID] = P.[PersonID]
+  JOIN [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement] N
+  ON R.[TANFOneTimeEventManagementID] = N.[TANFOneTimeEventManagementID]
+  ORDER BY [OneTimeEventRegistrantID] DESC
+
 /* OneTimeEventRegistrantID DESC */
 SELECT TOP 1000 [OneTimeEventRegistrantID]
       ,[TANFOneTimeEventManagementID]
@@ -110,7 +142,7 @@ SELECT TOP 1000 [OneTimeEventRegistrantID]
       ,[Attended]
       ,[Notes]
       ,[Active]
-  FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant]
+  FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] O
   ORDER BY [OneTimeEventRegistrantID] DESC
 
 
