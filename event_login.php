@@ -1,4 +1,3 @@
-//TODO: save event info in session
 // autocomplete='off'
 <!DOCTYPE html>
 <html>
@@ -8,17 +7,13 @@
     </head>
     <body>
         <?php require('header.php'); ?>
-
-        <!--
-        <p> Hi php echo $dbStaffFirstName , please select your event.</p>
-        -->
-
-        <form action="index.php" method='post'  id="getEventName">
-            <input type="hidden" name="action" value="getEventName">
+        <?php require('message.php'); ?>
+        <form action="index.php" method='post'  id="getEventInfo">
+            <input type="hidden" name="action" value="getEventInfo">
             <fieldset >
                 <legend>Event:</legend>
                 <label for='eventId' >Event Number:</label>
-                <input type='text' name='eventId' id='eventId'  maxlength="10" />
+                <input type='text' name='eventId' id='eventId'  maxlength="10" required/>
                 <select name="eventType" id="eventType">
                     <option value="1">Single Event</option>
                     <option value="2">Multi-session Event</option>

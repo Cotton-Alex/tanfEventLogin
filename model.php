@@ -3,15 +3,17 @@
 //http://php.net/manual/en/ref.sqlsrv.php
 
 function db() {
+    //echo " inside conn <br>";
 // TODO: Is there a more secure way to connect to the db?
-    //$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-    $serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+    $serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+    //$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
-    if ($conn == false) {
+    if ($conn === false) {
         echo "Conn error\n";
         die(print_r(sqlsrv_errors(), true));
     }
+    //echo " end of conn <br>";
     return $conn;
 }
 
@@ -23,89 +25,119 @@ function staff_login($lastName, $idNumber) {
         FROM [beta_torresmartinez].[StaffModule].[Staff]
         WHERE [StaffID] = " . $idNumber;
     $stmt = sqlsrv_query($conn, $sql);
-    if ($stmt == false) {
+    if ($stmt === false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
-    }
-    if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
+    } if (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
         die(print_r(sqlsrv_errors(), true));
     }
     $id = sqlsrv_get_field($stmt, 0);
     $dbStaffFirstName = sqlsrv_get_field($stmt, 1);
     $dbStaffLastName = sqlsrv_get_field($stmt, 2);
+    sqlsrv_free_stmt($stmt);
+    sqlsrv_close($conn);
     if ($lastName === $dbStaffLastName) {
         include ('event_login.php');
     }
-    sqlsrv_free_stmt($stmt);
-    sqlsrv_close($conn);
+    if ($lastName !== $dbStaffLastName) {
+        $message = "You've entered an invalid Name or ID number, please try again.";
+        include ('staff_login.php');
+    }
 }
 
 function single_event_info($eventId, $eventType) {
+//    echo "model.single_event_info";
+//    echo $eventId;
+//    echo $eventType;
     $conn = db();
     $sql = "SELECT [TANFOneTimeEventManagementID] 
       ,[EventName]
       ,[EventDate]
       FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement]
-      WHERE [TANFOneTimeEventManagementID] = " . $eventId;
+      WHERE [TANFOneTimeEventManagementID] = " . $eventId .
+            " AND   DATEPART(yyyy, EventDate) = " . date('Y') .
+            " AND   DATEPART(mm, EventDate) = " . date('m') .
+            " AND   DATEPART(dd, EventDate) = " . date('d');
     $stmt = sqlsrv_query($conn, $sql);
-    if ($stmt == false) {
-        echo "Error in query preparation/execution.\n";
-        die(print_r(sqlsrv_errors(), true));
+    if ($stmt === false) {
+        $message = "There's no record of that event. Please double check your event ID.";
+        include ('event_login.php');
+    } elseif (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
+        $message = "There's no record of that event. Please double check your event ID.";
+        include ('event_login.php');
+    } else {
+        $id = sqlsrv_get_field($stmt, 0);
+        $eventName = sqlsrv_get_field($stmt, 1);
+        $eventDate = sqlsrv_get_field($stmt, 2);
+        $_SESSION["eventId"] = $id;
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
+        if ($eventId === $id) {
+            include ('client_login.php');
+        }
+        if ($eventId !== $id) {
+            $message = "There's no record of that event. Please double check your event ID.";
+            include ('event_login.php');
+        }
     }
-    if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
-        die(print_r(sqlsrv_errors(), true));
-    }
-    $id = sqlsrv_get_field($stmt, 0);
-    $eventName = sqlsrv_get_field($stmt, 1);
-    $eventDate = sqlsrv_get_field($stmt, 2);
-    $_SESSION["eventId"] = $id;
-    include ('client_login.php');
-    sqlsrv_free_stmt($stmt);
-    sqlsrv_close($conn);
 }
 
 function multi_event_info($eventId, $eventType) {
+//    echo "model.multi_event_info<br>";
+//    echo "eventID = " . $eventId . "<br>";
+//    echo "eventType = " . $eventType . "<br>";
     $conn = db();
-    $sql = "SELECT S.[MultipleSessionEventSessionID]
-      ,E.[EventName]
-      ,S.[TANFMultipleSessionEventID]
-      ,S.[StartDate]
-      FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] S
-      JOIN [beta_torresmartinez].[TANFMultipleSessionEventModule].[TANFMultipleSessionEvent] E
-      ON S.[TANFMultipleSessionEventID] = E.[TANFMultipleSessionEventID]
-      WHERE S.[TANFMultipleSessionEventID] = " . $eventId .
+//    echo "back in model.multi_event_info from conn<br>";
+    $sql = "SELECT S.TANFMultipleSessionEventID
+        , E.EventName
+        , S.MultipleSessionEventSessionID
+        , S.StartDate
+      FROM beta_torresmartinez.TANFMultipleSessionEventModule.TANFMultipleSessionEvent AS E
+      JOIN beta_torresmartinez.TANFMultipleSessionEventModule.MultipleSessionEventSession AS S
+      ON (S.TANFMultipleSessionEventID = E.TANFMultipleSessionEventID)
+      WHERE S.TANFMultipleSessionEventID = " . $eventId .
             "AND   DATEPART(yyyy, StartDate) = " . date('Y') .
             "AND   DATEPART(mm, StartDate) = " . date('m') .
             "AND   DATEPART(dd, StartDate) = " . date('d');
     $stmt = sqlsrv_query($conn, $sql);
-    if ($stmt == false) {
+    if ($stmt === false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
-    }
-    if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
-        echo "There is no event with that ID scheduled for today.<br>"
-        . "Please double check your event number and try again.<br>";
-        header("Location: event_login.php");
-    }
-    if (sqlsrv_get_field($stmt, 0) == NULL) {
-        echo "There is no event with that ID scheduled for today.";
+    } elseif (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
+        $message = "Please double check your event number and try again.";
         include ('event_login.php');
+    } else {
+        echo "model.multi_event_info after if false<br>";
+        $sessionEventId = sqlsrv_get_field($stmt, 0);
+        $eventName = sqlsrv_get_field($stmt, 1);
+        $id = sqlsrv_get_field($stmt, 2);
+//        echo "sessioEventID = " . $sessionEventId . "<br>";
+//        echo "eventName = " . $eventName . "<br>";
+//        echo "id = " . $id . "<br>";
+        $_SESSION["eventName"] = $eventName;
+        $_SESSION["eventId"] = $id;
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
+        if ($eventId === $sessionEventId) {
+            include ('client_login.php');
+        }
+        if ($eventId !== $sessionEventId) {
+            $message = "There's no record of that event. Please double check your event ID.";
+            include ('event_login.php');
+        }
     }
-    $id = sqlsrv_get_field($stmt, 0);
-    $eventName = sqlsrv_get_field($stmt, 1);
-    $sessionEventId = sqlsrv_get_field($stmt, 2);
-    $_SESSION["eventId"] = $id;
-    include ('client_login.php');
-    sqlsrv_free_stmt($stmt);
-    sqlsrv_close($conn);
 }
 
 function client_login($clientLastName, $clientSSN) {
+    echo "model.client_login<br>";
+    echo $clientLastName . "<br>";
+    echo $clientSSN . "<br>";
     $conn = db();
     $sql = "SELECT P.[LastName]
 , P.[FirstName]
 , S.[PersonID]
 , H.[HouseholdID]
+, S.[SSN]
 FROM [beta_torresmartinez].[PersonModule].[Person] P
 JOIN [beta_torresmartinez].[PersonSSNModule].[Person] S
 ON P.[PersonID] = S.[PersonID]
@@ -113,26 +145,24 @@ JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
 ON P.[PersonID] = H.[PersonID]
 WHERE RIGHT(SSN, 4) = " . $clientSSN;
     $stmt = sqlsrv_query($conn, $sql);
-    if ($stmt == false) {
+    if ($stmt === false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
-    if (sqlsrv_fetch($stmt) == false) { // Make the first (and in this case, only) row of the result set available for reading.
+    if (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
         die(print_r(sqlsrv_errors(), true));
     }
     $dbClientLastName = sqlsrv_get_field($stmt, 0);
     $dbClientFirstName = sqlsrv_get_field($stmt, 1);
     $dbPersonId = sqlsrv_get_field($stmt, 2);
     $dbHouseholdId = sqlsrv_get_field($stmt, 3);
-
-    if ($clientLastName === $dbClientLastName) {
+    if ($clientLastName == $dbClientLastName) {
+        //echo "THEY MATCH THEY MATCH!!!!!!!!";
         $_SESSION["dbHouseholdId"] = $dbHouseholdId;
-//echo "Session variable dbHouseholdId = " . $_SESSION["dbHouseholdId"] . "<br>";
-//get_household_members($dbHouseholdId);
     }
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
-    return; // $dbHouseholdId;
+    return;
 }
 
 function get_household_members($dbHouseholdId) {
@@ -145,17 +175,13 @@ JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
 ON P.[PersonID] = H.[PersonID]
 WHERE [HouseholdID] = " . $dbHouseholdId;
     $stmt = sqlsrv_query($conn, $sql);
-    if ($stmt == false) {
+    if ($stmt === false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
-    /* Retrieve each row as an associative array and display the results. */
-
-    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_BOTH)) {
-//echo "Welcome " . $row['FirstName'] . " " . $row['LastName'] . "\n <br>";
+    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         echo ("<input type = 'checkbox' name = 'clientAttended[]' value = " . $row['PersonID'] . " maxlength = '3'/> " . $row['FirstName'] . " " . $row['LastName'] . "<br>");
     }
-    /* Free statement and connection resources. */
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
     return;
@@ -170,7 +196,6 @@ VALUES (?, ?, ?)";
     if ($stmt === false) {
         die(print_r(sqlsrv_errors(), true));
     }
-    /* Free statement and connection resources. */
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
     return;
@@ -185,7 +210,6 @@ VALUES (?, ?, ?)";
     if ($stmt === false) {
         die(print_r(sqlsrv_errors(), true));
     }
-    /* Free statement and connection resources. */
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
     return;
