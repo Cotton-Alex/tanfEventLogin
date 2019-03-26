@@ -5,8 +5,8 @@
 function db() {
     //echo " inside conn <br>";
 // TODO: Is there a more secure way to connect to the db?
-    $serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-    //$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+    //$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+    $serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
     if ($conn === false) {
@@ -35,10 +35,9 @@ function staff_login($idNumber) {
     return $dbStaffLastName;
 }
 
-function single_event_info($eventId, $eventType) {
-    echo "model.single_event_info";
+function single_event_info_id($eventId) {
+    echo "model.single_event_info_id";
     echo $eventId;
-    echo $eventType;
     $conn = db();
     $sql = "SELECT [TANFOneTimeEventManagementID] 
       ,[EventName]
@@ -49,39 +48,77 @@ function single_event_info($eventId, $eventType) {
             " AND   DATEPART(mm, EventDate) = " . date('m') .
             " AND   DATEPART(dd, EventDate) = " . date('d');
     $stmt = sqlsrv_query($conn, $sql);
-//    if ($stmt === false) {
-//        echo "Error in query preparation/execution.\n";
-//        die(print_r(sqlsrv_errors(), true));
-//    } if (sqlsrv_fetch($stmt) === false) { 
-//        die(print_r(sqlsrv_errors(), true));
-//    }
     if ($stmt === false) {
-        $message = "1There's no record of that event. Please double check your event ID.";
-        include ('event_login.php');
-    } elseif (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
-        $message = "2There's no record of that event. Please double check your event ID.";
-        include ('event_login.php');
+        echo "Error in query preparation/execution.\n";
+        die(print_r(sqlsrv_errors(), true));
+    } if (sqlsrv_fetch($stmt) === false) { 
+        die(print_r(sqlsrv_errors(), true));
     } else {
         $id = sqlsrv_get_field($stmt, 0);
-        $eventName = sqlsrv_get_field($stmt, 1);
-        $eventDate = sqlsrv_get_field($stmt, 2);
-        $_SESSION["eventId"] = $id;
         sqlsrv_free_stmt($stmt);
         sqlsrv_close($conn);
-        if ($eventId === $id) {
-            include ('client_login.php');
-        }
-        if ($eventId !== $id) {
-            $message = "3There's no record of that event. Please double check your event ID.";
-            include ('event_login.php');
-        }
+        return $id;
     }
 }
 
-function multi_event_info($eventId, $eventType) {
+function single_event_info_name($eventId) {
+    echo "model.single_event_info_name";
+    $conn = db();
+    $sql = "SELECT [TANFOneTimeEventManagementID] 
+      ,[EventName]
+      ,[EventDate]
+      FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement]
+      WHERE [TANFOneTimeEventManagementID] = " . $eventId .
+            " AND   DATEPART(yyyy, EventDate) = " . date('Y') .
+            " AND   DATEPART(mm, EventDate) = " . date('m') .
+            " AND   DATEPART(dd, EventDate) = " . date('d');
+    $stmt = sqlsrv_query($conn, $sql);
+    if ($stmt === false) {
+        echo "Error in query preparation/execution.\n";
+        die(print_r(sqlsrv_errors(), true));
+    } if (sqlsrv_fetch($stmt) === false) { 
+        die(print_r(sqlsrv_errors(), true));
+    } else {
+        $eventName = sqlsrv_get_field($stmt, 1);
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
+        return $eventName;
+    }
+}
+
+function multi_event_info_multiSessionEventId($eventId) {
     echo "model.multi_event_info<br>";
-    echo "eventID = " . $eventId . "<br>";
-    echo "eventType = " . $eventType . "<br>";
+    $conn = db();
+    $sql = "SELECT S.TANFMultipleSessionEventID
+        , E.EventName
+        , S.MultipleSessionEventSessionID
+        , S.StartDate
+      FROM beta_torresmartinez.TANFMultipleSessionEventModule.TANFMultipleSessionEvent AS E
+      JOIN beta_torresmartinez.TANFMultipleSessionEventModule.MultipleSessionEventSession AS S
+      ON (S.TANFMultipleSessionEventID = E.TANFMultipleSessionEventID)
+      WHERE S.TANFMultipleSessionEventID = " . $eventId .
+            "AND   DATEPART(yyyy, StartDate) = " . date('Y') .
+            "AND   DATEPART(mm, StartDate) = " . date('m') .
+            "AND   DATEPART(dd, StartDate) = " . date('d');
+    $stmt = sqlsrv_query($conn, $sql);
+    if ($stmt === false) {
+        echo "Error in query preparation/execution.\n";
+        die(print_r(sqlsrv_errors(), true));
+    }elseif (sqlsrv_fetch($stmt) === false) {
+        die(print_r(sqlsrv_errors(), true));
+    } else {
+        echo "model.multi_event_info after if false<br>";
+        $multiSessionEventId = sqlsrv_get_field($stmt, 0);
+        $eventName = sqlsrv_get_field($stmt, 1);
+        $id = sqlsrv_get_field($stmt, 2);
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
+        return $multiSessionEventId;
+    }
+}
+
+function multi_event_info_name($eventId) {
+    echo "model.multi_event_info<br>";
     $conn = db();
     $sql = "SELECT S.TANFMultipleSessionEventID
         , E.EventName
@@ -105,20 +142,38 @@ function multi_event_info($eventId, $eventType) {
         $sessionEventId = sqlsrv_get_field($stmt, 0);
         $eventName = sqlsrv_get_field($stmt, 1);
         $id = sqlsrv_get_field($stmt, 2);
-        echo "sessioEventID = " . $sessionEventId . "<br>";
-        echo "eventName = " . $eventName . "<br>";
-        echo "id = " . $id . "<br>";
-        $_SESSION["eventName"] = $eventName;
-        $_SESSION["eventId"] = $id;
         sqlsrv_free_stmt($stmt);
         sqlsrv_close($conn);
-        if ($eventId === $sessionEventId) {
-            include ('client_login.php');
-        }
-        if ($eventId !== $sessionEventId) {
-            $message = "4There's no record of that event. Please double check your event ID.";
-            include ('event_login.php');
-        }
+        return $eventName;
+    }
+}
+
+function multi_event_info_id($eventId) {
+    echo "model.multi_event_info<br>";
+    $conn = db();
+    $sql = "SELECT S.TANFMultipleSessionEventID
+        , E.EventName
+        , S.MultipleSessionEventSessionID
+        , S.StartDate
+      FROM beta_torresmartinez.TANFMultipleSessionEventModule.TANFMultipleSessionEvent AS E
+      JOIN beta_torresmartinez.TANFMultipleSessionEventModule.MultipleSessionEventSession AS S
+      ON (S.TANFMultipleSessionEventID = E.TANFMultipleSessionEventID)
+      WHERE S.TANFMultipleSessionEventID = " . $eventId .
+            "AND   DATEPART(yyyy, StartDate) = " . date('Y') .
+            "AND   DATEPART(mm, StartDate) = " . date('m') .
+            "AND   DATEPART(dd, StartDate) = " . date('d');
+    $stmt = sqlsrv_query($conn, $sql);
+    if ($stmt === false) {
+        echo "Error in query preparation/execution.\n";
+        die(print_r(sqlsrv_errors(), true));
+    }elseif (sqlsrv_fetch($stmt) === false) {
+        die(print_r(sqlsrv_errors(), true));
+    } else {
+        echo "model.multi_event_info after if false<br>";
+        $id = sqlsrv_get_field($stmt, 2);
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
+        return $id;
     }
 }
 

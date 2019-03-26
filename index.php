@@ -40,21 +40,35 @@ if ($action == "staffLogin") {
             $eventType == NULL || $eventType == FALSE) {
         $message = "Please enter your event number.";
         include ('event_login.php');
-    }
-    if ($eventType == 1) {
+    } elseif ($eventType == 1) {
         echo "index.getEventInfo.eventType==1";
         $_SESSION["eventType"] = $eventType;
-        echo $_SESSION["eventType"];
-        echo $eventType;
-        echo $eventId;
-        single_event_info($eventId, $eventType);
+        $id = single_event_info_id($eventId);
+        $eventName = single_event_info_name($eventId);
+         if ($eventId === $id) {
+        // Both OneTime and MultiSession events use $id to simplify later code
+            $_SESSION["eventId"] = $id;
+            include ('client_login.php');
+        }
+        if ($eventId !== $id) {
+            $message = "3There's no record of that event. Please double check your event ID.";
+            include ('event_login.php');
+        }
     } elseif ($eventType == 2) {
         echo "index.getEventInfo.eventType==2";
         $_SESSION["eventType"] = $eventType;
-        echo $_SESSION["eventType"];
-        echo $eventType;
-        echo $eventId;
-        multi_event_info($eventId, $eventType);
+        $multiSessionEventId = multi_event_info_multiSessionEventId($eventId);
+        $eventName = multi_event_info_name($eventId);
+        $id = multi_event_info_id($eventId);
+        if ($eventId === $multiSessionEventId) {
+        // Both OneTime and MultiSession events use $id to simplify later code
+            $_SESSION["eventId"] = $id;
+            include ('client_login.php');
+        }
+        if ($eventId !== $multiSessionEventId) {
+            $message = "There's no event scheduled for today with that ID.";
+            include ('event_login.php');
+        }
     } else {
         echo "index.getEventInfo.last_else You shouldn't be here!!!";
         return;
