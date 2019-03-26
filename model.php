@@ -17,38 +17,28 @@ function db() {
     return $conn;
 }
 
-function staff_login($lastName, $idNumber) {
+function staff_login($idNumber) {
     $conn = db();
-    $sql = "SELECT [StaffID]
-        ,[FirstName]
-        ,[LastName]
+    $sql = "SELECT [LastName]
         FROM [beta_torresmartinez].[StaffModule].[Staff]
         WHERE [StaffID] = " . $idNumber;
     $stmt = sqlsrv_query($conn, $sql);
     if ($stmt === false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
-    } if (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
+    } if (sqlsrv_fetch($stmt) === false) {
         die(print_r(sqlsrv_errors(), true));
     }
-    $id = sqlsrv_get_field($stmt, 0);
-    $dbStaffFirstName = sqlsrv_get_field($stmt, 1);
-    $dbStaffLastName = sqlsrv_get_field($stmt, 2);
+    $dbStaffLastName = sqlsrv_get_field($stmt, 0);
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
-    if ($lastName === $dbStaffLastName) {
-        include ('event_login.php');
-    }
-    if ($lastName !== $dbStaffLastName) {
-        $message = "You've entered an invalid Name or ID number, please try again.";
-        include ('staff_login.php');
-    }
+    return $dbStaffLastName;
 }
 
 function single_event_info($eventId, $eventType) {
-//    echo "model.single_event_info";
-//    echo $eventId;
-//    echo $eventType;
+    echo "model.single_event_info";
+    echo $eventId;
+    echo $eventType;
     $conn = db();
     $sql = "SELECT [TANFOneTimeEventManagementID] 
       ,[EventName]
@@ -59,11 +49,17 @@ function single_event_info($eventId, $eventType) {
             " AND   DATEPART(mm, EventDate) = " . date('m') .
             " AND   DATEPART(dd, EventDate) = " . date('d');
     $stmt = sqlsrv_query($conn, $sql);
+//    if ($stmt === false) {
+//        echo "Error in query preparation/execution.\n";
+//        die(print_r(sqlsrv_errors(), true));
+//    } if (sqlsrv_fetch($stmt) === false) { 
+//        die(print_r(sqlsrv_errors(), true));
+//    }
     if ($stmt === false) {
-        $message = "There's no record of that event. Please double check your event ID.";
+        $message = "1There's no record of that event. Please double check your event ID.";
         include ('event_login.php');
     } elseif (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
-        $message = "There's no record of that event. Please double check your event ID.";
+        $message = "2There's no record of that event. Please double check your event ID.";
         include ('event_login.php');
     } else {
         $id = sqlsrv_get_field($stmt, 0);
@@ -76,18 +72,17 @@ function single_event_info($eventId, $eventType) {
             include ('client_login.php');
         }
         if ($eventId !== $id) {
-            $message = "There's no record of that event. Please double check your event ID.";
+            $message = "3There's no record of that event. Please double check your event ID.";
             include ('event_login.php');
         }
     }
 }
 
 function multi_event_info($eventId, $eventType) {
-//    echo "model.multi_event_info<br>";
-//    echo "eventID = " . $eventId . "<br>";
-//    echo "eventType = " . $eventType . "<br>";
+    echo "model.multi_event_info<br>";
+    echo "eventID = " . $eventId . "<br>";
+    echo "eventType = " . $eventType . "<br>";
     $conn = db();
-//    echo "back in model.multi_event_info from conn<br>";
     $sql = "SELECT S.TANFMultipleSessionEventID
         , E.EventName
         , S.MultipleSessionEventSessionID
@@ -103,17 +98,16 @@ function multi_event_info($eventId, $eventType) {
     if ($stmt === false) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
-    } elseif (sqlsrv_fetch($stmt) === false) { // Make the first (and in this case, only) row of the result set available for reading.
-        $message = "Please double check your event number and try again.";
-        include ('event_login.php');
+    }elseif (sqlsrv_fetch($stmt) === false) {
+        die(print_r(sqlsrv_errors(), true));
     } else {
         echo "model.multi_event_info after if false<br>";
         $sessionEventId = sqlsrv_get_field($stmt, 0);
         $eventName = sqlsrv_get_field($stmt, 1);
         $id = sqlsrv_get_field($stmt, 2);
-//        echo "sessioEventID = " . $sessionEventId . "<br>";
-//        echo "eventName = " . $eventName . "<br>";
-//        echo "id = " . $id . "<br>";
+        echo "sessioEventID = " . $sessionEventId . "<br>";
+        echo "eventName = " . $eventName . "<br>";
+        echo "id = " . $id . "<br>";
         $_SESSION["eventName"] = $eventName;
         $_SESSION["eventId"] = $id;
         sqlsrv_free_stmt($stmt);
@@ -122,7 +116,7 @@ function multi_event_info($eventId, $eventType) {
             include ('client_login.php');
         }
         if ($eventId !== $sessionEventId) {
-            $message = "There's no record of that event. Please double check your event ID.";
+            $message = "4There's no record of that event. Please double check your event ID.";
             include ('event_login.php');
         }
     }

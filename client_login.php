@@ -7,7 +7,7 @@
     </head>
     <body>
         <?php require('header.php'); ?>
-        <?php require('message.php'); ?>
+        <?php include('message.php'); ?>
         <?php
         if (isset($eventName)) {
             echo "<p><h3> WELCOME TO </h3><p>"

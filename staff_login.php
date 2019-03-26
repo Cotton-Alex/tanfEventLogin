@@ -13,7 +13,7 @@
             <fieldset >
                 <legend>Employee Login:</legend>
                 <label for='lastName' >Last Name:</label>
-                <input type='text' name='lastName' id='lastName'  maxlength="30" required/>
+                <input type='text' name='lastName' id='lastName'  maxlength="30"/>
                 <label for='idNumber' >ID Number:</label>
                 <input type='text' name='idNumber' id='idNumber'  maxlength="10" required/>
                 <input type='submit' name='Submit' value='Submit' />

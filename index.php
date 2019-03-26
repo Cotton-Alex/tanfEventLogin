@@ -14,28 +14,32 @@ if ($action == NULL) {
 }
 if ($action == "staffLogin") {
     include ('staff_login.php');
-    
-    
 } else if ($action == "verifyEmployee") {
     echo "index.verifyEmployee";
     $lastName = filter_input(INPUT_POST, 'lastName');
-    $idNumber = filter_input(INPUT_POST, 'idNumber');
-    staff_login($lastName, $idNumber);
-    
-    
+    $idNumber = filter_input(INPUT_POST, 'idNumber', FILTER_VALIDATE_INT);
+    if ($lastName == NULL || $lastName == FALSE ||
+            $idNumber == NULL || $idNumber == FALSE) {
+        $message = "Please enter your last name and ID number.";
+        include ('staff_login.php');
+    } else {
+        $dbStaffLastName = staff_login($idNumber);
+        if ($lastName === $dbStaffLastName) {
+            include ('event_login.php');
+        }
+        if ($lastName !== $dbStaffLastName) {
+            $message = "You've entered an invalid Name or ID number, please try again.";
+            include ('staff_login.php');
+        }
+    }
 } else if ($action == "getEventInfo") {
     echo "index.getEventInfo";
     $eventId = filter_input(INPUT_POST, 'eventId', FILTER_VALIDATE_INT);
     $eventType = filter_input(INPUT_POST, 'eventType', FILTER_VALIDATE_INT);
-    echo $eventId;
-    echo $eventType;
-    if (empty($_POST['eventId'])) {      
-        $this->HandleError("Event ID is empty!");
-        return false;
-    }
-    elseif (empty($_POST['eventType'])) {
-        $this->HandleError("Event type is empty!");
-        return false;
+    if ($eventId == NULL || $eventId == FALSE ||
+            $eventType == NULL || $eventType == FALSE) {
+        $message = "Please enter your event number.";
+        include ('event_login.php');
     }
     if ($eventType == 1) {
         echo "index.getEventInfo.eventType==1";
@@ -44,20 +48,17 @@ if ($action == "staffLogin") {
         echo $eventType;
         echo $eventId;
         single_event_info($eventId, $eventType);
-    }
-    elseif ($eventType == 2) {
+    } elseif ($eventType == 2) {
         echo "index.getEventInfo.eventType==2";
         $_SESSION["eventType"] = $eventType;
         echo $_SESSION["eventType"];
         echo $eventType;
         echo $eventId;
         multi_event_info($eventId, $eventType);
-    }
-    else {
+    } else {
         echo "index.getEventInfo.last_else You shouldn't be here!!!";
         return;
     }
-    
 } else if ($action == "clientLogin") {
     echo "index.clientLogin";
     $clientLastName = filter_input(INPUT_POST, 'clientLastName');
@@ -80,8 +81,6 @@ if ($action == "staffLogin") {
     echo $sessionHouseholdId . "<br>";
     echo $sessionEventId;
     include ('client_attendance.php');
-    
-    
 } else if ($action == 'clientAttendee') {
     echo "index.clientAttendee" . "<br>";
     $sessionEventType = $_SESSION["eventType"];
@@ -102,4 +101,4 @@ if ($action == "staffLogin") {
     } else {
         echo "No household members selected.";
     }
-}
+}    
