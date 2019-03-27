@@ -13,7 +13,6 @@ function db() {
         echo "Database connection error\n";
         die(print_r(sqlsrv_errors(), true));
     }
-    //echo " end of conn <br>";
     return $conn;
 }
 
@@ -205,6 +204,7 @@ WHERE RIGHT(SSN, 4) = " . $clientSSN;
     $dbClientFirstName = sqlsrv_get_field($stmt, 1);
     $dbPersonId = sqlsrv_get_field($stmt, 2);
     $dbHouseholdId = sqlsrv_get_field($stmt, 3);
+    $_SESSION["dbHouseholdId"] = $dbHouseholdId;
     if ($clientLastName == $dbClientLastName) {
         //echo "THEY MATCH THEY MATCH!!!!!!!!";
         $_SESSION["dbHouseholdId"] = $dbHouseholdId;
