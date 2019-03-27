@@ -20,18 +20,18 @@ ORDER BY [LastName], [SSN]
 /*===    MultipleSessionEvents    ============================================*/
 /*============================================================================*/
 
-/* ADD EVENT */
+/* ADD MULTIPLE SESSION EVENT */
 INSERT INTO [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] (TANFMultipleSessionEventID, StartDate) 
 VALUES (11, GETDATE());
 
-/* LIST EVENTS */
+/* LIST MULTIPLE SESSION EVENTS */
 SELECT TOP 1000 [MultipleSessionEventSessionID]
       ,[TANFMultipleSessionEventID]
       ,[StartDate]
   FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession]
   ORDER BY [MultipleSessionEventSessionID] DESC
 
-/* CHECK ATTENDANCE */
+/* CHECK MULTIPLE SESSION ATTENDANCE */
 SELECT TOP 1000 M.[TANFMultipleSessionEventID]
     ,M.[EventName]
     ,S.[MultipleSessionEventSessionID]
@@ -54,18 +54,18 @@ SELECT TOP 1000 M.[TANFMultipleSessionEventID]
 /*===    OneTimeEvents    ====================================================*/
 /*============================================================================*/
 
-/* ADD EVENT */
+/* ADD ONE TIME EVENT */
 INSERT INTO [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement] (EventName, EventDate) 
 VALUES ('INSERT NEW EVENT NAME', GETDATE());
 
-/* LIST EVENTS */
+/* LIST ONE TIME EVENTS */
 SELECT [TANFOneTimeEventManagementID] 
       ,[EventName]
       ,[EventDate]
       FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement]
 	  ORDER BY [TANFOneTimeEventManagementID] DESC
 
-/* CHECK ATTENDANCE */
+/* CHECK ONE TIME ATTENDANCE */
 SELECT TOP 1000 R.[OneTimeEventRegistrantID]
       ,R.[TANFOneTimeEventManagementID]
       ,N.[EventName]

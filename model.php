@@ -10,7 +10,7 @@ function db() {
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
     if ($conn === false) {
-        echo "Conn error\n";
+        echo "Database connection error\n";
         die(print_r(sqlsrv_errors(), true));
     }
     //echo " end of conn <br>";
@@ -36,8 +36,8 @@ function staff_login($idNumber) {
 }
 
 function single_event_info_id($eventId) {
-    echo "model.single_event_info_id";
-    echo $eventId;
+//    echo "model.single_event_info_id";
+//    echo $eventId;
     $conn = db();
     $sql = "SELECT [TANFOneTimeEventManagementID] 
       ,[EventName]
@@ -62,7 +62,7 @@ function single_event_info_id($eventId) {
 }
 
 function single_event_info_name($eventId) {
-    echo "model.single_event_info_name";
+//    echo "model.single_event_info_name";
     $conn = db();
     $sql = "SELECT [TANFOneTimeEventManagementID] 
       ,[EventName]
@@ -87,7 +87,7 @@ function single_event_info_name($eventId) {
 }
 
 function multi_event_info_multiSessionEventId($eventId) {
-    echo "model.multi_event_info<br>";
+//    echo "model.multi_event_info<br>";
     $conn = db();
     $sql = "SELECT S.TANFMultipleSessionEventID
         , E.EventName
@@ -107,7 +107,7 @@ function multi_event_info_multiSessionEventId($eventId) {
     }elseif (sqlsrv_fetch($stmt) === false) {
         die(print_r(sqlsrv_errors(), true));
     } else {
-        echo "model.multi_event_info after if false<br>";
+//        echo "model.multi_event_info after if false<br>";
         $multiSessionEventId = sqlsrv_get_field($stmt, 0);
         $eventName = sqlsrv_get_field($stmt, 1);
         $id = sqlsrv_get_field($stmt, 2);
@@ -118,7 +118,7 @@ function multi_event_info_multiSessionEventId($eventId) {
 }
 
 function multi_event_info_name($eventId) {
-    echo "model.multi_event_info<br>";
+//    echo "model.multi_event_info<br>";
     $conn = db();
     $sql = "SELECT S.TANFMultipleSessionEventID
         , E.EventName
@@ -138,7 +138,7 @@ function multi_event_info_name($eventId) {
     }elseif (sqlsrv_fetch($stmt) === false) {
         die(print_r(sqlsrv_errors(), true));
     } else {
-        echo "model.multi_event_info after if false<br>";
+//        echo "model.multi_event_info after if false<br>";
         $sessionEventId = sqlsrv_get_field($stmt, 0);
         $eventName = sqlsrv_get_field($stmt, 1);
         $id = sqlsrv_get_field($stmt, 2);
@@ -149,7 +149,7 @@ function multi_event_info_name($eventId) {
 }
 
 function multi_event_info_id($eventId) {
-    echo "model.multi_event_info<br>";
+//    echo "model.multi_event_info<br>";
     $conn = db();
     $sql = "SELECT S.TANFMultipleSessionEventID
         , E.EventName
@@ -169,7 +169,7 @@ function multi_event_info_id($eventId) {
     }elseif (sqlsrv_fetch($stmt) === false) {
         die(print_r(sqlsrv_errors(), true));
     } else {
-        echo "model.multi_event_info after if false<br>";
+//        echo "model.multi_event_info after if false<br>";
         $id = sqlsrv_get_field($stmt, 2);
         sqlsrv_free_stmt($stmt);
         sqlsrv_close($conn);
@@ -178,9 +178,9 @@ function multi_event_info_id($eventId) {
 }
 
 function client_login($clientLastName, $clientSSN) {
-    echo "model.client_login<br>";
-    echo $clientLastName . "<br>";
-    echo $clientSSN . "<br>";
+//    echo "model.client_login<br>";
+//    echo $clientLastName . "<br>";
+//    echo $clientSSN . "<br>";
     $conn = db();
     $sql = "SELECT P.[LastName]
 , P.[FirstName]
