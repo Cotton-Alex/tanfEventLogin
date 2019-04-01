@@ -1,5 +1,3 @@
-<?php session_start() ?>
-// autocomplete='off'
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,7 +10,7 @@
         <?php
         if (isset($_SESSION['eventName'])) {
             echo "<p><h3> WELCOME TO </h3><p>"
-            . "<p><h1>" . $_SESSION['eventName'] . "</h1></p>";
+            . "<p><h1>" . ($_SESSION['eventName']) . "</h1></p>";
         }?> 
         <form action="index.php" method='post'  id="clientLogin">
             <input type="hidden" name="action" value="clientLogin">

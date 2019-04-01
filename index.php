@@ -16,11 +16,9 @@ if ($action == NULL) {
 
 if ($action == "staffLogin") {
     include ('staff_login.php');
-    
-    
 } else if ($action == "verifyEmployee") {
-//    echo "index.verifyEmployee";
-    $lastName = filter_input(INPUT_POST, 'lastName');
+    //echo "<br>debug enter i.verifyEmployee";
+    $lastName = filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_SPECIAL_CHARS);
     $idNumber = filter_input(INPUT_POST, 'idNumber', FILTER_VALIDATE_INT);
     if ($lastName == NULL || $lastName == FALSE ||
             $idNumber == NULL || $idNumber == FALSE) {
@@ -39,7 +37,7 @@ if ($action == "staffLogin") {
     
     
 } else if ($action == "getEventInfo") {
-//    echo "index.getEventInfo";
+    //echo "<br>debug enter i.getEventInfo";
     $eventId = filter_input(INPUT_POST, 'eventId', FILTER_VALIDATE_INT);
     $eventType = filter_input(INPUT_POST, 'eventType', FILTER_VALIDATE_INT);
     if ($eventId == NULL || $eventId == FALSE ||
@@ -47,11 +45,14 @@ if ($action == "staffLogin") {
         $message = "Please enter your event number.";
         include ('event_login.php');
     } elseif ($eventType == 1) {
-//        echo "index.getEventInfo.eventType==1";
-        $_SESSION["eventType"] = $eventType;
-        $id = single_event_info_id($eventId);
+        //echo "<br>debug i.getEventInfo.eventType = " . $eventType;
+        $_SESSION['eventType'] = $eventType;
         $eventName = single_event_info_name($eventId);
-        $_SESSION["eventName"] = $eventName;
+        echo "<br>debug enter i.getEventInfo eventName = " . $eventName;
+        $_SESSION['eventName'] = $eventName;
+        echo "<br>debug enter i.getEventInfo SESSION['eventName'] = " . $_SESSION['eventName'];
+        
+        $id = single_event_info_id($eventId);
         if ($eventId === $id) {
             // Both OneTime and MultiSession events use $id to simplify later code
             $_SESSION["eventId"] = $id;
@@ -62,12 +63,12 @@ if ($action == "staffLogin") {
             include ('event_login.php');
         }
     } elseif ($eventType == 2) {
-//        echo "index.getEventInfo.eventType==2";
-        $_SESSION["eventType"] = $eventType;
+        //echo "<br>debug i.getEventInfo.eventType = " . $eventType;
+        $_SESSION['eventType'] = $eventType;
         $multiSessionEventId = multi_event_info_multiSessionEventId($eventId);
         $id = multi_event_info_id($eventId);
         $eventName = multi_event_info_name($eventId);
-        $_SESSION["eventName"] = $eventName;
+        $_SESSION['eventName'] = $eventName;
         if ($eventId === $multiSessionEventId) {
             // Both OneTime and MultiSession events use $id to simplify later code
             $_SESSION["eventId"] = $id;
@@ -78,45 +79,58 @@ if ($action == "staffLogin") {
             include ('event_login.php');
         }
     } else {
-        echo "index.getEventInfo.last_else You shouldn't be here!!!";
-        return;
+        //echo "<br>debug i.getEventInfo.last_else";
+        $message = "Something went wrong. ERROR CODE: 42";
+        include ('event_login.php');
     }
     
     
 } else if ($action == "clientLogin") {
-//    echo "index.clientLogin";
-    $clientLastName = filter_input(INPUT_POST, 'clientLastName');
-    $clientSSN = filter_input(INPUT_POST, 'clientSSN');
+    //echo "<br>debug enter i.clientLogin";
+    $clientLastName = filter_input(INPUT_POST, 'clientLastName', FILTER_SANITIZE_SPECIAL_CHARS);
+    $clientSSN = filter_input(INPUT_POST, 'clientSSN', FILTER_VALIDATE_INT);
     if ($clientLastName == NULL || $clientLastName == FALSE ||
             $clientSSN == NULL || $clientSSN == FALSE) {
         $message = "Please enter your last name and the last 4 digtis of your SSN.";
         include ('client_login.php');
     } else {
-        client_login($clientLastName, $clientSSN);
-        $sessionHouseholdId = $_SESSION["dbHouseholdId"];
-        $sessionEventId = $_SESSION["eventId"];
-        include ('client_attendance.php');
+        $clientInfoArray =  client_login($clientSSN);
+        $dbClientLastName = $clientInfoArray[0];
+        $dbClientFirstName = $clientInfoArray[1];
+        $dbPersonId = $clientInfoArray[2];
+        $dbHouseholdId = $clientInfoArray[3];
+        if ($clientLastName == $dbClientLastName) {
+            //echo "<br>debug m.client_login input and db lastNames match";
+            //$_SESSION["dbHouseholdId"] = $dbHouseholdId;
+            $sessionHouseholdId = $dbHouseholdId;
+            include ('client_attendance.php');
+        } else {
+            $message = "The information entered doesn't match any of our records. Please try again.";
+            include ('client_login.php');
+        }
     }
     
     
 } else if ($action == 'clientAttendee') {
-//    echo "index.clientAttendee" . "<br>";
+    //echo "<br>debug enter i.clientAttendee";
     $sessionEventType = $_SESSION["eventType"];
     $sessionEventId = $_SESSION["eventId"];
     $householdMemberAttended = filter_input(INPUT_POST, 'clientAttended', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
-//    echo $sessionEventType . "<br>";
-//    echo $sessionEventId . "<br>";
+    //echo "<br>debug i.clientAttendee sessionEventType = " . $sessionEventType;
+    //echo "<br>debug i.clientAttendee sessionEventId = " . $sessionEventId;
     if ($householdMemberAttended !== NULL) {
         if ($sessionEventType == 1) {
             foreach ($householdMemberAttended as $key => $value) {
                 singleEventUpdateAttendance($sessionEventId, $value);
-                header("location: client_login.php");
+                //header("location: client_login.php");
             }
+            include ('client_login.php');
         } else if ($sessionEventType == 2) {
             foreach ($householdMemberAttended as $key => $value) {
                 multiEventUpdateAttendance($sessionEventId, $value);
-                header("location: client_login.php");
+                //header("location: client_login.php");
             }
+            include ('client_login.php');
         }
     } else {
         echo "No household members selected.";
