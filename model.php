@@ -250,6 +250,25 @@ function get_household_members($dbHouseholdId) {
 }
 
 
+function get_all_household_members($dbHouseholdId) {
+    $conn = db();
+    $sql = "SELECT *
+        FROM [beta_torresmartinez].[PersonModule].[Person] P
+        JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
+        ON P.[PersonID] = H.[PersonID]
+        WHERE [HouseholdID] = " . $dbHouseholdId;
+    $stmt = sqlsrv_query($conn, $sql);
+    if ($stmt === false) {
+        echo "Error in query preparation/execution.\n";
+        die(print_r(sqlsrv_errors(), true));
+    }
+    echo $stmt;
+    sqlsrv_free_stmt($stmt);
+    sqlsrv_close($conn);
+    return;
+}
+
+
 function singleEventUpdateAttendance($sessionEventId, $attendeeId) {
     $conn = db();
     $sql = "INSERT INTO [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] (TANFOneTimeEventManagementID, RegistrantID, Attended)

@@ -26,10 +26,10 @@ if ($action == "staffLogin") {
         include ('staff_login.php');
     } else {
         $dbStaffLastName = staff_login($idNumber);
-        if ($lastName === $dbStaffLastName) {
+        if (strtolower($lastName) === strtolower($dbStaffLastName)) {
             include ('event_login.php');
         }
-        if ($lastName !== $dbStaffLastName) {
+        if (strtolower($lastName) !== strtolower($dbStaffLastName)) {
             $message = "You've entered an invalid Name or ID number, please try again.";
             include ('staff_login.php');
         }
@@ -99,7 +99,7 @@ if ($action == "staffLogin") {
         $dbClientFirstName = $clientInfoArray[1];
         $dbPersonId = $clientInfoArray[2];
         $dbHouseholdId = $clientInfoArray[3];
-        if ($clientLastName == $dbClientLastName) {
+        if (strtolower($clientLastName) == strtolower($dbClientLastName)) {
             //echo "<br>debug m.client_login input and db lastNames match";
             //$_SESSION["dbHouseholdId"] = $dbHouseholdId;
             $sessionHouseholdId = $dbHouseholdId;
