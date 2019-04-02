@@ -11,14 +11,15 @@
             <input type="hidden" name="action" value="clientAttendee">
             <fieldset >
                 <legend>Who is in attendance:</legend>
-                <?php foreach ($householdMembers as $householdMember);
+                <?php get_household_members($sessionHouseholdId); ?>
+                <?php// foreach ($householdMembers as $householdMember);
                 //get_all_household_members($dbHouseholdId);
                 ?>
-                "<input type = 'checkbox' name = 'clientAttended[]' 
+<!--                "<input type = 'checkbox' name = 'clientAttended[]' 
                         value = " . $row['PersonID'] . " 
                         maxlength = '3'/> " . 
                 $row['FirstName'] . " " . 
-                $row['LastName'] . "<br>"
+                $row['LastName'] . "<br>"-->
                 <input type='submit' name='Submit' value='Submit' />
             </fieldset>
         </form>

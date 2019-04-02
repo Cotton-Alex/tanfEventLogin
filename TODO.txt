@@ -3,7 +3,7 @@ TODO!!!
 Must include:
 - Event confirmation - ability to confirm the correct event or put in another number
 - Attendee counter
-- Attendee list - Must login with employee cred to view
+- Attendee list - Must login with employee credentials to view
 - Event closeout - clears all session data
 
 Include if there's time:
