@@ -129,14 +129,14 @@ if ($action == "staffLogin") {
                 one_Time_Event_Update_Attendance_No_Duplicates($sessionEventId, $value);
                 //header("location: client_login.php");
             }
-            $eventId = $_SESSION['eventId'];
-            one_Time_Event_Attendee_Count($eventId);
+            $attendanceCount = one_Time_Event_Attendee_Count($sessionEventId);
             include ('client_login.php');
         } else if ($sessionEventType == 2) {
             foreach ($householdMemberAttended as $key => $value) {
                 multi_Event_Update_Attendance_No_Duplicates($sessionEventId, $value);
                 //header("location: client_login.php");
             }
+            $attendanceCount = multi_Event_Attendee_Count($sessionEventId);
             include ('client_login.php');
         }
     } else {

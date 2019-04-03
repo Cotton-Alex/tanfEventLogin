@@ -6,7 +6,13 @@
     </head>
     <body>
         <?php require('header.php'); ?>
+        
+        <?php if (isset($attendanceCount)) {
+            echo $attendanceCount . " in attendance."; 
+        }?>
+        
         <?php include('message.php'); ?>
+        
         <?php
         if (isset($_SESSION['eventName'])) {
             echo "<p><h3> WELCOME TO </h3><p>"
