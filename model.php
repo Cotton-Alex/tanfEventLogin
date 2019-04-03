@@ -3,8 +3,8 @@
 function db() {
     //echo "<br>debug enter m.db<br>";
     // TODO: Is there a more secure way to connect to the db?
-    $serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-    //$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+    //$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+    $serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
     if ($conn === false) {
@@ -283,3 +283,93 @@ function multi_Event_Attendee_Count($sessionEventId) {
         return $attendanceCount;
     }
 }
+
+
+//function one_Time_Event_Attendee_List($sessionEventId) {
+//    //echo "<br>debug enter m.one_Time_Event_Attendee_Count";
+//    //echo "<br>debug m.one_Time_Event_Attendee_Count eventId = " . $eventId;
+//    $conn = db();
+//    $sql = "SELECT *
+//        FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] R
+//        JOIN [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement] N
+//        ON R.[TANFOneTimeEventManagementID] = N.[TANFOneTimeEventManagementID]
+//        WHERE N.[TANFOneTimeEventManagementID] = " . $sessionEventId .
+//            " AND R.[Attended] = 1" .
+//            " AND   DATEPART(yyyy, EventDate) = " . date('Y') .
+//            " AND   DATEPART(mm, EventDate) = " . date('m') .
+//            " AND   DATEPART(dd, EventDate) = " . date('d');
+//    $stmt = sqlsrv_query($conn, $sql, array(), array("Scrollable" => SQLSRV_CURSOR_KEYSET));
+//    if ($stmt === false) {
+//        echo "Error in query preparation/execution.\n";
+//        die(print_r(sqlsrv_errors(), true));
+//    }
+//    $attendanceCount = sqlsrv_num_rows($stmt);
+//    if ($attendanceCount === false) {
+//        $attendanceCount = 0;
+//    } else {
+//        //echo "<br>debug m.one_Time_Event_Attendee_Count after ifs";
+//        sqlsrv_free_stmt($stmt);
+//        sqlsrv_close($conn);
+//        return $attendanceCount;
+//    }
+//}
+
+
+//function multi_Event_Attendee_List($sessionEventId) {
+//    //echo "<br>debug enter m.one_Time_Event_Attendee_Count";
+//    //echo "<br>debug m.one_Time_Event_Attendee_Count eventId = " . $eventId;
+//    $conn = db();
+//    $sql = "SELECT M.[TANFMultipleSessionEventID]
+//    ,M.[EventName]
+//    ,S.[MultipleSessionEventSessionID]
+//    ,S.[StartDate]
+//    ,A.[PersonID]
+//    ,P.[FirstName]
+//    ,P.[LastName]
+//    ,A.[Attended]
+//    FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[TANFMultipleSessionEvent] M
+//    JOIN [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] S
+//    ON M.[TANFMultipleSessionEventID] = S.[TANFMultipleSessionEventID]
+//    JOIN [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee] A
+//    ON S.[MultipleSessionEventSessionID] = A.[MultipleSessionEventSessionID]
+//    JOIN [beta_torresmartinez].[PersonModule].[Person] P
+//    ON A.[PersonID] = P.[PersonID]
+//        WHERE A.[MultipleSessionEventSessionID] = " . $sessionEventId .
+//            " AND A.[Attended] = 1" .
+//            " AND   DATEPART(yyyy, StartDate) = " . date('Y') .
+//            " AND   DATEPART(mm, StartDate) = " . date('m') .
+//            " AND   DATEPART(dd, StartDate) = " . date('d');
+//    $stmt = sqlsrv_query($conn, $sql, array(), array("Scrollable" => SQLSRV_CURSOR_KEYSET));
+//    if ($stmt === false) {
+//        echo "Error in query preparation/execution.\n";
+//        die(print_r(sqlsrv_errors(), true));
+//    }
+//    $attendanceCount = sqlsrv_num_rows($stmt);
+//    if ($attendanceCount === false) {
+//        $attendanceCount = 0;
+//    } else {
+//        //echo "<br>debug m.one_Time_Event_Attendee_Count after ifs";
+//        sqlsrv_free_stmt($stmt);
+//        sqlsrv_close($conn);
+//        return $attendanceCount;
+//    }
+//}
+
+
+//function get_all_attendees_list($dbHouseholdId) {
+//    $conn = db();
+//    $sql = "SELECT *
+//        FROM [beta_torresmartinez].[PersonModule].[Person] P
+//        JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
+//        ON P.[PersonID] = H.[PersonID]
+//        WHERE [HouseholdID] = " . $dbHouseholdId;
+//    $stmt = sqlsrv_query($conn, $sql);
+//    if ($stmt === false) {
+//        echo "Error in query preparation/execution.\n";
+//        die(print_r(sqlsrv_errors(), true));
+//    }
+//    echo $stmt;
+//    sqlsrv_free_stmt($stmt);
+//    sqlsrv_close($conn);
+//    return;
+//}

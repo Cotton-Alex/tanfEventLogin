@@ -15,6 +15,7 @@ if ($action == NULL) {
 
 
 if ($action == "staffLogin") {
+    $_SESSION["currentLocation"] = "staff_login.php";
     include ('staff_login.php');
     
     
@@ -25,14 +26,17 @@ if ($action == "staffLogin") {
     if ($lastName == NULL || $lastName == FALSE ||
             $idNumber == NULL || $idNumber == FALSE) {
         $message = "Please enter your last name and ID number.";
+        $_SESSION["currentLocation"] = "staff_login.php";
         include ('staff_login.php');
     } else {
         $dbStaffLastName = staff_login($idNumber);
         if (strtolower($lastName) === strtolower($dbStaffLastName)) {
+            $_SESSION["currentLocation"] = "event_login.php";
             include ('event_login.php');
         }
         if (strtolower($lastName) !== strtolower($dbStaffLastName)) {
             $message = "You've entered an invalid Name or ID number, please try again.";
+            $_SESSION["currentLocation"] = "staff_login.php";
             include ('staff_login.php');
         }
     }
@@ -45,6 +49,7 @@ if ($action == "staffLogin") {
     if ($eventId == NULL || $eventId == FALSE ||
             $eventType == NULL || $eventType == FALSE) {
         $message = "Please enter your event number.";
+        $_SESSION["currentLocation"] = "event_login.php";
         include ('event_login.php');
     } elseif ($eventType == 1) {
         //echo "<br>debug i.getEventInfo.eventType = " . $eventType;
@@ -59,10 +64,12 @@ if ($action == "staffLogin") {
         if ($eventId === $id) {
             // Both OneTime and MultiSession events use $id to simplify later code
             $_SESSION["eventId"] = $id;
+            $_SESSION["currentLocation"] = "client_login.php";
             include ('client_login.php');
         }
         if ($eventId !== $id) {
             $message = "There's no record of that event. Please double check your event ID.";
+            $_SESSION["currentLocation"] = "event_login.php";
             include ('event_login.php');
         }
     } elseif ($eventType == 2) {
@@ -77,15 +84,18 @@ if ($action == "staffLogin") {
         if ($eventId === $multiSessionEventId) {
             // Both OneTime and MultiSession events use $id to simplify later code
             $_SESSION["eventId"] = $id;
+            $_SESSION["currentLocation"] = "client_login.php";
             include ('client_login.php');
         }
         if ($eventId !== $multiSessionEventId) {
             $message = "There's no event scheduled for today with that ID.";
+            $_SESSION["currentLocation"] = "event_login.php";
             include ('event_login.php');
         }
     } else {
         //echo "<br>debug i.getEventInfo.last_else";
         $message = "Something went wrong. ERROR CODE: 42";
+        $_SESSION["currentLocation"] = "event_login.php";
         include ('event_login.php');
     }
     
@@ -97,6 +107,7 @@ if ($action == "staffLogin") {
     if ($clientLastName == NULL || $clientLastName == FALSE ||
             $clientSSN == NULL || $clientSSN == FALSE) {
         $message = "Please enter your last name and the last 4 digtis of your SSN.";
+        $_SESSION["currentLocation"] = "client_login.php";
         include ('client_login.php');
     } else {
         $clientInfoArray =  client_login($clientSSN);
@@ -108,9 +119,11 @@ if ($action == "staffLogin") {
             //echo "<br>debug m.client_login input and db lastNames match";
 //            $_SESSION["dbHouseholdId"] = $dbHouseholdId;
             $sessionHouseholdId = $dbHouseholdId;
+            $_SESSION["currentLocation"] = "client_login.php";
             include ('client_attendance.php');
         } else {
             $message = "The information entered doesn't match any of our records. Please try again.";
+            $_SESSION["currentLocation"] = "client_login.php";
             include ('client_login.php');
         }
     }
@@ -130,6 +143,7 @@ if ($action == "staffLogin") {
                 //header("location: client_login.php");
             }
             $attendanceCount = one_Time_Event_Attendee_Count($sessionEventId);
+            $_SESSION["currentLocation"] = "client_login.php";
             include ('client_login.php');
         } else if ($sessionEventType == 2) {
             foreach ($householdMemberAttended as $key => $value) {
@@ -137,10 +151,45 @@ if ($action == "staffLogin") {
                 //header("location: client_login.php");
             }
             $attendanceCount = multi_Event_Attendee_Count($sessionEventId);
+            $_SESSION["currentLocation"] = "client_login.php";
             include ('client_login.php');
         }
     } else {
         $message = "No selection was made. Please try again.";
+        $_SESSION["currentLocation"] = "client_login.php";
         include ('client_login.php');
     }
-}  
+
+    
+} else if ($action == 'adminLogin') {
+    //echo "<br>debug enter i.adminLogin";
+    $lastName = filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_SPECIAL_CHARS);
+    $idNumber = filter_input(INPUT_POST, 'idNumber', FILTER_VALIDATE_INT);
+    if ($lastName == NULL || $lastName == FALSE ||
+            $idNumber == NULL || $idNumber == FALSE) {
+        $message = "Please enter your last name and ID number.";
+        include ('admin_login.php');
+    } else {
+        $dbStaffLastName = staff_login($idNumber);
+        if (strtolower($lastName) === strtolower($dbStaffLastName)) {
+            include ('admin_controls.php');
+        }
+        if (strtolower($lastName) !== strtolower($dbStaffLastName)) {
+            $message = "You've entered an invalid Name or ID number, please try again.";
+            include ('admin_login.php');
+        }
+    }
+    
+    
+} else if ($action == 'adminCancel') {
+    include ($_SESSION["currentLocation"]);
+
+    
+} else if ($action == 'closeEvent') {
+    unset($_SESSION['eventType']);
+    unset($_SESSION['eventId']);
+    unset($_SESSION['eventName']);
+    unset($_SESSION['currentLocation']);
+    $action = 'staffLogin';
+    header("Location: index.php");
+}

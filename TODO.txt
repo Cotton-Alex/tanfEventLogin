@@ -4,7 +4,7 @@ Must include:
 - Event confirmation - ability to confirm the correct event or put in another number
 DONE - Attendee counter
 - Attendee list - Must login with employee credentials to view
-- Event closeout - clears all session data
+DONE - Event closeout - clears all session data
 
 Include if there's time:
 - Search for event by event name or partial name

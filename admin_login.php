@@ -1,24 +1,24 @@
+<?php // session_start();?>
 <!DOCTYPE html>
 <html>
     <head>
         <?php require('head.php'); ?>
-        <title>Staff Login</title>
+        <title>Admin Login</title>
     </head>
     <body>
-        <header>
-        </header>
+        <?php require('header.php'); ?>
         <?php require('message.php'); ?>
-        <form action="index.php" method='post' id="staffLogin">
-            <input type="hidden" name="action" value="verifyEmployee">
+        <form action="index.php" method='post' id="adminLogin">
+            <input type="hidden" name="action" value="adminLogin">
             <fieldset >
-                <legend>Employee Login:</legend>
+                <legend>Admin Login:</legend>
                 <label for='lastName' >Last Name:</label>
                 <input type='text' name='lastName' id='lastName'  maxlength="30"/>
                 <label for='idNumber' >ID Number:</label>
                 <input type='text' name='idNumber' id='idNumber'  maxlength="10"/>
-                <input type='submit' name='Submit' value='Submit' />
+                <button type='submit' name='action' value='adminLogin'>Submit</button>
+                <button type='submit' name='action' value='adminCancel'>Cancel</button>
             </fieldset>
         </form>
-
     </body>
 </html>

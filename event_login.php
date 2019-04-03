@@ -13,7 +13,7 @@
             <fieldset >
                 <legend>Event:</legend>
                 <label for='eventId' >Event Number:</label>
-                <input type='text' name='eventId' id='eventId'  maxlength="10" required/>
+                <input type='text' name='eventId' id='eventId'  maxlength="10"/>
                 <select name="eventType" id="eventType">
                     <option value="1">Single Event</option>
                     <option value="2">Multi-session Event</option>
