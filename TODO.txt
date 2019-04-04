@@ -8,3 +8,24 @@ DONE - Event closeout - clears all session data
 
 Include if there's time:
 - Search for event by event name or partial name
+
+Feedback from Chad:
+01. DONE - staff_login($idNumber) - check active for null or 1
+02. if client is already registered, give feedback
+03. "cast as date" to compare dates without times
+04. DONE - remove [beta_torresmartinez] from queries
+05. param queries
+06. DONE - lucked out - must insert into all table names of the same type - SEE NOTE A.
+07. to search for partial name - LIKE '%string%'
+08. view template - subview template
+09. DONE - INFO - null is the line, 0 is unchecked/empty, 1 is checked.
+10. back stack - check js
+
+
+NOTES
+A. When inserting, you MUST insert on all related tables. Not an SQL thing
+    it's a RiteTrack thing. 
+    Example to find all tables:
+        SELECT *
+        FROM INFORMATION_SCHEMA.TABLES
+        WHERE TABLE_NAME = 'PERSON'

@@ -3,8 +3,8 @@
 function db() {
     //echo "<br>debug enter m.db<br>";
     // TODO: Is there a more secure way to connect to the db?
-    //$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-    $serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+    $serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+    //$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
     if ($conn === false) {
@@ -19,8 +19,9 @@ function staff_login($idNumber) {
     //echo "<br>debug enter m.staffLogin";
     $conn = db();
     $sql = "SELECT [LastName]
-        FROM [beta_torresmartinez].[StaffModule].[Staff]
-        WHERE [StaffID] = " . $idNumber;
+        FROM [StaffModule].[Staff]
+        WHERE [StaffID] = " . $idNumber .
+        "AND ([Active] IS NULL OR [Active] = 1)";
     $stmt = sqlsrv_query($conn, $sql);
     if ($stmt === false) {
         echo "Error in query preparation/execution.\n";
@@ -44,7 +45,7 @@ function single_event_info($eventId) {
     $sql = "SELECT [TANFOneTimeEventManagementID] 
         ,[EventName]
         ,[EventDate]
-        FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement]
+        FROM [TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement]
         WHERE [TANFOneTimeEventManagementID] = " . $eventId .
             " AND   DATEPART(yyyy, EventDate) = " . date('Y') .
             " AND   DATEPART(mm, EventDate) = " . date('m') .
@@ -77,8 +78,8 @@ function multi_event_info($eventId) {
         , E.EventName
         , S.MultipleSessionEventSessionID
         , S.StartDate
-        FROM beta_torresmartinez.TANFMultipleSessionEventModule.TANFMultipleSessionEvent AS E
-        JOIN beta_torresmartinez.TANFMultipleSessionEventModule.MultipleSessionEventSession AS S
+        FROM TANFMultipleSessionEventModule.TANFMultipleSessionEvent AS E
+        JOIN TANFMultipleSessionEventModule.MultipleSessionEventSession AS S
         ON (S.TANFMultipleSessionEventID = E.TANFMultipleSessionEventID)
         WHERE S.TANFMultipleSessionEventID = " . $eventId .
             "AND   DATEPART(yyyy, StartDate) = " . date('Y') .
@@ -112,10 +113,10 @@ function client_login($clientSSN) {
         , S.[PersonID]
         , H.[HouseholdID]
         , S.[SSN]
-        FROM [beta_torresmartinez].[PersonModule].[Person] P
-        JOIN [beta_torresmartinez].[PersonSSNModule].[Person] S
+        FROM [PersonModule].[Person] P
+        JOIN [PersonSSNModule].[Person] S
         ON P.[PersonID] = S.[PersonID]
-        JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
+        JOIN [HouseholdModule].[HouseholdMember] H
         ON P.[PersonID] = H.[PersonID]
         WHERE RIGHT(SSN, 4) = " . $clientSSN;
     $stmt = sqlsrv_query($conn, $sql);
@@ -143,8 +144,8 @@ function get_household_members($dbHouseholdId) {
     $sql = "SELECT P.[LastName]
         , P.[FirstName]
         , P.[PersonID]
-        FROM [beta_torresmartinez].[PersonModule].[Person] P
-        JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
+        FROM [PersonModule].[Person] P
+        JOIN [HouseholdModule].[HouseholdMember] H
         ON P.[PersonID] = H.[PersonID]
         WHERE [HouseholdID] = " . $dbHouseholdId;
     $stmt = sqlsrv_query($conn, $sql);
@@ -164,8 +165,8 @@ function get_household_members($dbHouseholdId) {
 function get_all_household_members($dbHouseholdId) {
     $conn = db();
     $sql = "SELECT *
-        FROM [beta_torresmartinez].[PersonModule].[Person] P
-        JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
+        FROM [PersonModule].[Person] P
+        JOIN [HouseholdModule].[HouseholdMember] H
         ON P.[PersonID] = H.[PersonID]
         WHERE [HouseholdID] = " . $dbHouseholdId;
     $stmt = sqlsrv_query($conn, $sql);
@@ -183,9 +184,9 @@ function get_all_household_members($dbHouseholdId) {
 function one_Time_Event_Update_Attendance_No_Duplicates($sessionEventId, $attendeeId) {
     $conn = db();
     $sql = "IF NOT EXISTS (SELECT [TANFOneTimeEventManagementID], [RegistrantID]
-	FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant]
+	FROM [TANFOneTimeEventManagementModule].[OneTimeEventRegistrant]
 	WHERE [TANFOneTimeEventManagementID] = " . $sessionEventId . " AND [RegistrantID] = " . $attendeeId . ")
-INSERT INTO [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] (TANFOneTimeEventManagementID, RegistrantID, Attended)
+INSERT INTO [TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] (TANFOneTimeEventManagementID, RegistrantID, Attended)
 VALUES (?, ?, ?)";
     $params = array($sessionEventId, $attendeeId, "1");
     $stmt = sqlsrv_query($conn, $sql, $params);
@@ -201,9 +202,9 @@ VALUES (?, ?, ?)";
 function multi_Event_Update_Attendance_No_Duplicates($sessionEventId, $attendeeId) {
     $conn = db();
     $sql = "IF NOT EXISTS (SELECT [MultipleSessionEventSessionID], [PersonID]
-	FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee]
+	FROM [TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee]
 	WHERE [MultipleSessionEventSessionID] = " . $sessionEventId . " AND [PersonID] = " . $attendeeId . ")
-INSERT INTO [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee] (MultipleSessionEventSessionID, PersonID, Attended) 
+INSERT INTO [TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee] (MultipleSessionEventSessionID, PersonID, Attended) 
 VALUES (?, ?, ?)";
     $params = array($sessionEventId, $attendeeId, "1");
     $stmt = sqlsrv_query($conn, $sql, $params);
@@ -220,8 +221,8 @@ function one_Time_Event_Attendee_Count($sessionEventId) {
     //echo "<br>debug m.one_Time_Event_Attendee_Count eventId = " . $eventId;
     $conn = db();
     $sql = "SELECT *
-        FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] R
-        JOIN [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement] N
+        FROM [TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] R
+        JOIN [TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement] N
         ON R.[TANFOneTimeEventManagementID] = N.[TANFOneTimeEventManagementID]
         WHERE N.[TANFOneTimeEventManagementID] = " . $sessionEventId .
             " AND R.[Attended] = 1" .
@@ -256,12 +257,12 @@ function multi_Event_Attendee_Count($sessionEventId) {
     ,P.[FirstName]
     ,P.[LastName]
     ,A.[Attended]
-    FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[TANFMultipleSessionEvent] M
-    JOIN [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] S
+    FROM [TANFMultipleSessionEventModule].[TANFMultipleSessionEvent] M
+    JOIN [TANFMultipleSessionEventModule].[MultipleSessionEventSession] S
     ON M.[TANFMultipleSessionEventID] = S.[TANFMultipleSessionEventID]
-    JOIN [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee] A
+    JOIN [TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee] A
     ON S.[MultipleSessionEventSessionID] = A.[MultipleSessionEventSessionID]
-    JOIN [beta_torresmartinez].[PersonModule].[Person] P
+    JOIN [PersonModule].[Person] P
     ON A.[PersonID] = P.[PersonID]
         WHERE A.[MultipleSessionEventSessionID] = " . $sessionEventId .
             " AND A.[Attended] = 1" .
@@ -290,8 +291,8 @@ function multi_Event_Attendee_Count($sessionEventId) {
 //    //echo "<br>debug m.one_Time_Event_Attendee_Count eventId = " . $eventId;
 //    $conn = db();
 //    $sql = "SELECT *
-//        FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] R
-//        JOIN [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement] N
+//        FROM [TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] R
+//        JOIN [TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement] N
 //        ON R.[TANFOneTimeEventManagementID] = N.[TANFOneTimeEventManagementID]
 //        WHERE N.[TANFOneTimeEventManagementID] = " . $sessionEventId .
 //            " AND R.[Attended] = 1" .
@@ -327,12 +328,12 @@ function multi_Event_Attendee_Count($sessionEventId) {
 //    ,P.[FirstName]
 //    ,P.[LastName]
 //    ,A.[Attended]
-//    FROM [beta_torresmartinez].[TANFMultipleSessionEventModule].[TANFMultipleSessionEvent] M
-//    JOIN [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSession] S
+//    FROM [TANFMultipleSessionEventModule].[TANFMultipleSessionEvent] M
+//    JOIN [TANFMultipleSessionEventModule].[MultipleSessionEventSession] S
 //    ON M.[TANFMultipleSessionEventID] = S.[TANFMultipleSessionEventID]
-//    JOIN [beta_torresmartinez].[TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee] A
+//    JOIN [TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee] A
 //    ON S.[MultipleSessionEventSessionID] = A.[MultipleSessionEventSessionID]
-//    JOIN [beta_torresmartinez].[PersonModule].[Person] P
+//    JOIN [PersonModule].[Person] P
 //    ON A.[PersonID] = P.[PersonID]
 //        WHERE A.[MultipleSessionEventSessionID] = " . $sessionEventId .
 //            " AND A.[Attended] = 1" .
@@ -359,8 +360,8 @@ function multi_Event_Attendee_Count($sessionEventId) {
 //function get_all_attendees_list($dbHouseholdId) {
 //    $conn = db();
 //    $sql = "SELECT *
-//        FROM [beta_torresmartinez].[PersonModule].[Person] P
-//        JOIN [beta_torresmartinez].[HouseholdModule].[HouseholdMember] H
+//        FROM [PersonModule].[Person] P
+//        JOIN [HouseholdModule].[HouseholdMember] H
 //        ON P.[PersonID] = H.[PersonID]
 //        WHERE [HouseholdID] = " . $dbHouseholdId;
 //    $stmt = sqlsrv_query($conn, $sql);
