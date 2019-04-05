@@ -3,8 +3,8 @@
 function db() {
     //echo "<br>debug enter m.db<br>";
     // TODO: Is there a more secure way to connect to the db?
-    $serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-    //$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+    //$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+    $serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
     if ($conn === false) {
@@ -137,6 +137,7 @@ function client_login($clientSSN) {
     sqlsrv_close($conn);
     return $clientInfoArray;
 }
+
 
 
 function get_household_members($dbHouseholdId) {

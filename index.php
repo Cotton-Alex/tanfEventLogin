@@ -109,7 +109,7 @@ if ($action == "staffLogin") {
         $message = "Please enter your last name and the last 4 digtis of your SSN.";
         $_SESSION["currentLocation"] = "client_login.php";
         include ('client_login.php');
-    } else {
+    } else { 
         $clientInfoArray =  client_login($clientSSN);
         $dbClientLastName = $clientInfoArray[0];
         $dbClientFirstName = $clientInfoArray[1];
@@ -182,7 +182,10 @@ if ($action == "staffLogin") {
     
     
 } else if ($action == 'adminCancel') {
-    include ($_SESSION["currentLocation"]);
+    //include ($_SESSION["currentLocation"]);
+    echo "<script>
+    window.history.back()
+    </script>";
 
     
 } else if ($action == 'closeEvent') {

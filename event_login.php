@@ -7,7 +7,7 @@
     <body>
         <?php require('header.php'); ?>
         <?php require('message.php'); ?>
-        <h3>Add event confirmation with option to change event number after this page</h3><br>
+        <!--<h3>Add event confirmation with option to change event number after this page</h3><br>-->
         <form action="index.php" method='post'  id="getEventInfo">
             <input type="hidden" name="action" value="getEventInfo">
             <fieldset >
