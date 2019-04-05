@@ -12,18 +12,16 @@
             <fieldset >
                 <legend>Who is in attendance:</legend>
                 <?php get_household_members($sessionHouseholdId); ?>
-               <section>
-                    <table>
-<?php echo ("<input type = 'checkbox' name = 'clientAttended[]' value = " . $row['PersonID'] . " maxlength = '3'/> " . $row['FirstName'] . " " . $row['LastName'] . "<br>");
-    
-                        <?php foreach ($left_page_entries as $entry) : ?>
-                            <tr>
-                                <td id="tdDate"><?php echo $entry['entryDate']; ?></td>
-                                <td><?php echo $entry['entryData']; ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </table>        
-                </section>
+                
+                
+                <?php //foreach ($dbHouseholdMembers as $dbHouseholdMember) : ?>
+                    <?php //echo ("<input type = 'checkbox' name = 'clientAttended[]' value = " .
+//                    $dbHouseholdMember['PersonID'] . " maxlength = '3'/> " .
+//                    $dbHouseholdMember['FirstName'] . " " .
+//                    $dbHouseholdMember['LastName'] . "<br>"); ?>
+                <?php //endforeach; ?>
+                
+                
                 <input type='submit' name='Submit' value='Submit' />
             </fieldset>
         </form>

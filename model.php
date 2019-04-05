@@ -3,8 +3,8 @@
 function db() {
     //echo "<br>debug enter m.db<br>";
     // TODO: Is there a more secure way to connect to the db?
-    //$serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
-    $serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
+    $serverName = "DESKTOP-LF2D9SR\SQLEXPRESS"; //HOME
+    //$serverName = "TH-B03-VMWKS07\SQLEXPRESS";  //WORK
     $connectionInfo = array("Database" => "beta_torresmartinez");
     $conn = sqlsrv_connect($serverName, $connectionInfo);
     if ($conn === false) {
@@ -154,11 +154,13 @@ function get_household_members($dbHouseholdId) {
         echo "Error in query preparation/execution.\n";
         die(print_r(sqlsrv_errors(), true));
     }
+    //$dbHouesholeMembers = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         echo ("<input type = 'checkbox' name = 'clientAttended[]' value = " . $row['PersonID'] . " maxlength = '3'/> " . $row['FirstName'] . " " . $row['LastName'] . "<br>");
     }
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
+    //return $dbHouesholeMembers;
     return;
 }
 

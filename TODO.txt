@@ -1,5 +1,7 @@
 TODO!!!
 
+https://www.sitepoint.com/community/t/sqlsrv-fetch-sql-sqlsrv-fetch-assoc-being-replaced-with-pdo-fetch-assoc/283223/7
+
 Must include:
 - Event confirmation - ability to confirm the correct event or put in another number
 DONE - Attendee counter

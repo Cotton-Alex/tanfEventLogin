@@ -119,6 +119,7 @@ if ($action == "staffLogin") {
             //echo "<br>debug m.client_login input and db lastNames match";
 //            $_SESSION["dbHouseholdId"] = $dbHouseholdId;
             $sessionHouseholdId = $dbHouseholdId;
+//            $dbHouseholdMembers = array(get_household_members($dbHouseholdId));
             $_SESSION["currentLocation"] = "client_login.php";
             include ('client_attendance.php');
         } else {
@@ -126,7 +127,7 @@ if ($action == "staffLogin") {
             $_SESSION["currentLocation"] = "client_login.php";
             include ('client_login.php');
         }
-    }
+    }    
     
     
 } else if ($action == 'clientAttendee') {
