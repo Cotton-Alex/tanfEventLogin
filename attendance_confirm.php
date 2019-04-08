@@ -12,7 +12,7 @@
             </div>
             <h3> Check-in </h3>
             <h1></h1>
-            <form id ="attendance_form" action="index.php" method='post'  id="clientAttendee">
+            <form id ="attendance_form" action="index.php" method='post'  id="clientAttendee" autocomplete=off>
                 <input type="hidden" name="action" value="clientAttendee">
                 <legend class="attendance_form_legend"><strong>Who is in attendance:</strong></legend>
                 <?php get_household_members($sessionHouseholdId); ?>

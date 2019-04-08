@@ -10,7 +10,7 @@
             <div id="message">
                 <?php require('message.php'); ?>
             </div>
-            <form action="index.php" method='post'  id="getEventInfo">
+            <form action="index.php" method='post'  id="getEventInfo" autocomplete=off>
                 <input type="hidden" name="action" value="getEventInfo">
                 <legend><strong>Event:</strong></legend>
                 <label for='eventId' >Event Number:</label>

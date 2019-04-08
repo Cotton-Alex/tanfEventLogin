@@ -18,7 +18,7 @@
                 }
                 ?>
             </div>
-            <form action="index.php" method='post'  id="clientLogin">
+            <form action="index.php" method='post'  id="clientLogin" autocomplete=off>
                 <input type="hidden" name="action" value="clientLogin">
                     <legend><strong>Client Login:</strong></legend>
                     <label for='clientLastName' >Last Name:</label>
