@@ -1,4 +1,4 @@
-<?php // session_start();?>
+<?php // session_start();   ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -7,18 +7,20 @@
     </head>
     <body>
         <?php require('header.php'); ?>
-        <?php require('message.php'); ?>
-        <form action="index.php" method='post' id="adminLogin">
-            <input type="hidden" name="action" value="adminLogin">
-            <fieldset >
-                <legend>Admin Login:</legend>
+        <main>
+            <div id="message">
+                <?php include('message.php'); ?>
+            </div>
+            <form action="index.php" method='post' id="adminLogin">
+                <input type="hidden" name="action" value="adminLogin">
+                <legend><strong>Admin Login:</strong></legend>
                 <label for='lastName' >Last Name:</label>
                 <input type='text' name='lastName' id='lastName'  maxlength="30"/>
                 <label for='idNumber' >ID Number:</label>
                 <input type='text' name='idNumber' id='idNumber'  maxlength="10"/>
-                <button type='submit' name='action' value='adminLogin'>Submit</button>
-                <button type='submit' name='action' value='adminCancel'>Cancel</button>
-            </fieldset>
-        </form>
+                <button class="input-btn" type='submit' name='action' value='adminLogin'>Submit</button>
+                <button class="input-btn" type='submit' name='action' value='adminCancel'>Cancel</button>
+            </form>
+        </main>
     </body>
 </html>

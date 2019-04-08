@@ -5,11 +5,12 @@ https://www.sitepoint.com/community/t/sqlsrv-fetch-sql-sqlsrv-fetch-assoc-being-
 Must include:
 - Event confirmation - ability to confirm the correct event or put in another number
 DONE - Attendee counter
-- Attendee list - Must login with employee credentials to view
+DONE - Attendee list - Must login with employee credentials to view
 DONE - Event closeout - clears all session data
 
 Include if there's time:
 - Search for event by event name or partial name
+- Switch from sqlsrv to pdo_sqlsrv
 
 Feedback from Chad:
 01. DONE - staff_login($idNumber) - check active for null or 1

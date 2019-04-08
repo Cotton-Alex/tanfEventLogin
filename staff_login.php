@@ -5,21 +5,20 @@
         <title>Staff Login</title>
     </head>
     <body>
-        <header>
-            <br>
-        </header>
-        <?php require('message.php'); ?>
-        <form action="index.php" method='post' id="staffLogin">
-            <input type="hidden" name="action" value="verifyEmployee">
-            <fieldset >
-                <legend>Employee Login:</legend>
-                <label for='lastName' >Last Name:</label>
+        <?php require('header.php'); ?>
+        <main>
+            <div id="message">
+                <?php require('message.php'); ?>
+            </div>
+            <form action="index.php" method='post' id="staffLogin">
+                <input type="hidden" name="action" value="verifyEmployee">
+                <legend><strong>Employee Login:</strong></legend>
+                <label class="form_item" for='lastName' >Last Name:</label>
                 <input type='text' name='lastName' id='lastName'  maxlength="30"/>
-                <label for='idNumber' >ID Number:</label>
+                <label class="form_item" for='idNumber' >ID Number:</label>
                 <input type='text' name='idNumber' id='idNumber'  maxlength="10"/>
-                <input type='submit' name='Submit' value='Submit' />
-            </fieldset>
-        </form>
-
+                <input class="input-btn" type='submit' name='Submit' value='Submit' />
+            </form>
+        </main>
     </body>
 </html>

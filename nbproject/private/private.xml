@@ -3,17 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/tanfEventLogin/staff_login.php</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/head.php</file>
             <file>file:/C:/xampp/htdocs/tanfEventLogin/client_login.php</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/Week08-Grid/sass/styleB.scss</file>
             <file>file:/C:/xampp/htdocs/tanfEventLogin/attendance_confirm.php</file>
             <file>file:/C:/xampp/htdocs/tanfEventLogin/TODO.txt</file>
-            <file>file:/C:/xampp/htdocs/tanfEventLogin/sql/SQL%20for%20DEBUGGING.sql</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/Week08-Grid/rut.html</file>
             <file>file:/C:/xampp/htdocs/tanfEventLogin/model.php</file>
             <file>file:/C:/xampp/htdocs/tanfEventLogin/index.php</file>
-            <file>file:/C:/xampp/htdocs/tanfEventLogin/message.php</file>
-            <file>file:/C:/xampp/htdocs/tanfEventLogin/event_login.php</file>
-            <file>file:/C:/xampp/htdocs/tanfEventLogin/header.php</file>
             <file>file:/C:/xampp/htdocs/tanfEventLogin/client_attendance.php</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/admin_login.php</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/css.css</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/staff_login.php</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/sql/SQL%20for%20DEBUGGING.sql</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/Week08-Grid/sass/style.scss</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/header.php</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/event_login.php</file>
+            <file>file:/C:/xampp/htdocs/tanfEventLogin/admin_controls.php</file>
         </group>
     </open-files>
 </project-private>

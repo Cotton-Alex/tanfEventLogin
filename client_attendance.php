@@ -6,25 +6,17 @@
     </head>
     <body>
         <?php require('header.php'); ?>
-        <h3> Check-in </h3>
-        <form action="index.php" method='post'  id="clientAttendee">
-            <input type="hidden" name="action" value="clientAttendee">
-            <fieldset >
-                <legend>Who is in attendance:</legend>
+        <main>
+            <div id="message">
+                <?php include('message.php'); ?>
+            </div>
+            <h3> Check-in </h3>
+            <form id="attendance_form" action="index.php" method='post'  id="clientAttendee">
+                <input type="hidden" name="action" value="clientAttendee">
+                <legend class="attendance_form_legend"><strong>Who is in attendance:</strong></legend>
                 <?php get_household_members($sessionHouseholdId); ?>
-                
-                
-                <?php //foreach ($dbHouseholdMembers as $dbHouseholdMember) : ?>
-                    <?php //echo ("<input type = 'checkbox' name = 'clientAttended[]' value = " .
-//                    $dbHouseholdMember['PersonID'] . " maxlength = '3'/> " .
-//                    $dbHouseholdMember['FirstName'] . " " .
-//                    $dbHouseholdMember['LastName'] . "<br>"); ?>
-                <?php //endforeach; ?>
-                
-                
-                <input type='submit' name='Submit' value='Submit' />
-            </fieldset>
-        </form>
-
+                <input class="input-btn attendance_form_btn" type='submit' name='Submit' value='Submit' />
+            </form>
+        </main>
     </body>
 </html>

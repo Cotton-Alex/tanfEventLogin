@@ -183,10 +183,10 @@ if ($action == "staffLogin") {
     
     
 } else if ($action == 'adminCancel') {
-    //include ($_SESSION["currentLocation"]);
-    echo "<script>
-    window.history.back()
-    </script>";
+    include ($_SESSION["currentLocation"]);
+//    echo "<script>
+//    window.history.back()
+//    </script>";
 
     
 } else if ($action == 'closeEvent') {

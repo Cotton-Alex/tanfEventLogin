@@ -14,14 +14,13 @@ function db() {
     return $conn;
 }
 
-
 function staff_login($idNumber) {
     //echo "<br>debug enter m.staffLogin";
     $conn = db();
     $sql = "SELECT [LastName]
         FROM [StaffModule].[Staff]
         WHERE [StaffID] = " . $idNumber .
-        "AND ([Active] IS NULL OR [Active] = 1)";
+            "AND ([Active] IS NULL OR [Active] = 1)";
     $stmt = sqlsrv_query($conn, $sql);
     if ($stmt === false) {
         echo "Error in query preparation/execution.\n";
@@ -36,7 +35,6 @@ function staff_login($idNumber) {
     sqlsrv_close($conn);
     return $dbStaffLastName;
 }
-
 
 function single_event_info($eventId) {
     //echo "<br>debug enter m.single_event_info_id";
@@ -68,7 +66,6 @@ function single_event_info($eventId) {
     sqlsrv_close($conn);
     return $singleEventInfo;
 }
-
 
 function multi_event_info($eventId) {
     //echo "<br>debug enter m.multi_event_info";
@@ -102,7 +99,6 @@ function multi_event_info($eventId) {
     sqlsrv_close($conn);
     return $multiSessionEventInfo;
 }
-
 
 function client_login($clientSSN) {
     //echo "<br>debug enter m.client_login";
@@ -138,8 +134,6 @@ function client_login($clientSSN) {
     return $clientInfoArray;
 }
 
-
-
 function get_household_members($dbHouseholdId) {
     $conn = db();
     $sql = "SELECT P.[LastName]
@@ -156,14 +150,14 @@ function get_household_members($dbHouseholdId) {
     }
     //$dbHouesholeMembers = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        echo ("<input type = 'checkbox' name = 'clientAttended[]' value = " . $row['PersonID'] . " maxlength = '3'/> " . $row['FirstName'] . " " . $row['LastName'] . "<br>");
+        echo ("<input class='checkbox attendance_form_input' type = 'checkbox' name = 'clientAttended[]' value = " . $row['PersonID'] . " maxlength = '3'/>" . $row['FirstName'] . " " . $row['LastName']);
+//        echo ("<p class='checkbox_names'>" . $row['FirstName'] . " " . $row['LastName'] . "</p>");
     }
     sqlsrv_free_stmt($stmt);
     sqlsrv_close($conn);
     //return $dbHouesholeMembers;
     return;
 }
-
 
 function get_all_household_members($dbHouseholdId) {
     $conn = db();
@@ -183,7 +177,6 @@ function get_all_household_members($dbHouseholdId) {
     return;
 }
 
-
 function one_Time_Event_Update_Attendance_No_Duplicates($sessionEventId, $attendeeId) {
     $conn = db();
     $sql = "IF NOT EXISTS (SELECT [TANFOneTimeEventManagementID], [RegistrantID]
@@ -200,7 +193,6 @@ VALUES (?, ?, ?)";
     sqlsrv_close($conn);
     return;
 }
-
 
 function multi_Event_Update_Attendance_No_Duplicates($sessionEventId, $attendeeId) {
     $conn = db();
@@ -288,77 +280,82 @@ function multi_Event_Attendee_Count($sessionEventId) {
     }
 }
 
+function get_one_Time_Event_Attendee_List($sessionEventId) {
+    //echo "<br>debug enter m.get_one_Time_Event_Attendee_List";
+    //echo "<br>debug m.get_one_Time_Event_Attendee_List eventId = " . $eventId;
+    $conn = db();
+    $sql = "SELECT R.[OneTimeEventRegistrantID]
+      ,R.[TANFOneTimeEventManagementID]
+      ,N.[EventName]
+      ,N.[EventDate]
+      ,R.[RegistrantID]
+      ,P.[FirstName]
+      ,P.[LastName]
+      ,R.[Attended]
+        FROM [beta_torresmartinez].[TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] R
+        JOIN [beta_torresmartinez].[PersonModule].[Person] P
+        ON R.[RegistrantID] = P.[PersonID]
+        JOIN [beta_torresmartinez].[TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement] N
+        ON R.[TANFOneTimeEventManagementID] = N.[TANFOneTimeEventManagementID]
+        WHERE N.[TANFOneTimeEventManagementID] = " . $sessionEventId .
+            " AND R.[Attended] = 1" .
+            " AND   DATEPART(yyyy, EventDate) = " . date('Y') .
+            " AND   DATEPART(mm, EventDate) = " . date('m') .
+            " AND   DATEPART(dd, EventDate) = " . date('d');
+    $stmt = sqlsrv_query($conn, $sql);
+    if ($stmt === false) {
+        echo "Error in query preparation/execution.\n";
+        die(print_r(sqlsrv_errors(), true));
+    } else {
+        //echo "<br>debug m.get_one_Time_Event_Attendee_List after ifs";
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            echo ("<p class='attendee_list'> " . $row['FirstName'] . " " . $row['LastName']);
+        }
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
+        return;
+    }
+}
 
-//function one_Time_Event_Attendee_List($sessionEventId) {
-//    //echo "<br>debug enter m.one_Time_Event_Attendee_Count";
-//    //echo "<br>debug m.one_Time_Event_Attendee_Count eventId = " . $eventId;
-//    $conn = db();
-//    $sql = "SELECT *
-//        FROM [TANFOneTimeEventManagementModule].[OneTimeEventRegistrant] R
-//        JOIN [TANFOneTimeEventManagementModule].[TANFOneTimeEventManagement] N
-//        ON R.[TANFOneTimeEventManagementID] = N.[TANFOneTimeEventManagementID]
-//        WHERE N.[TANFOneTimeEventManagementID] = " . $sessionEventId .
-//            " AND R.[Attended] = 1" .
-//            " AND   DATEPART(yyyy, EventDate) = " . date('Y') .
-//            " AND   DATEPART(mm, EventDate) = " . date('m') .
-//            " AND   DATEPART(dd, EventDate) = " . date('d');
-//    $stmt = sqlsrv_query($conn, $sql, array(), array("Scrollable" => SQLSRV_CURSOR_KEYSET));
-//    if ($stmt === false) {
-//        echo "Error in query preparation/execution.\n";
-//        die(print_r(sqlsrv_errors(), true));
-//    }
-//    $attendanceCount = sqlsrv_num_rows($stmt);
-//    if ($attendanceCount === false) {
-//        $attendanceCount = 0;
-//    } else {
-//        //echo "<br>debug m.one_Time_Event_Attendee_Count after ifs";
-//        sqlsrv_free_stmt($stmt);
-//        sqlsrv_close($conn);
-//        return $attendanceCount;
-//    }
-//}
-
-
-//function multi_Event_Attendee_List($sessionEventId) {
-//    //echo "<br>debug enter m.one_Time_Event_Attendee_Count";
-//    //echo "<br>debug m.one_Time_Event_Attendee_Count eventId = " . $eventId;
-//    $conn = db();
-//    $sql = "SELECT M.[TANFMultipleSessionEventID]
-//    ,M.[EventName]
-//    ,S.[MultipleSessionEventSessionID]
-//    ,S.[StartDate]
-//    ,A.[PersonID]
-//    ,P.[FirstName]
-//    ,P.[LastName]
-//    ,A.[Attended]
-//    FROM [TANFMultipleSessionEventModule].[TANFMultipleSessionEvent] M
-//    JOIN [TANFMultipleSessionEventModule].[MultipleSessionEventSession] S
-//    ON M.[TANFMultipleSessionEventID] = S.[TANFMultipleSessionEventID]
-//    JOIN [TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee] A
-//    ON S.[MultipleSessionEventSessionID] = A.[MultipleSessionEventSessionID]
-//    JOIN [PersonModule].[Person] P
-//    ON A.[PersonID] = P.[PersonID]
-//        WHERE A.[MultipleSessionEventSessionID] = " . $sessionEventId .
-//            " AND A.[Attended] = 1" .
-//            " AND   DATEPART(yyyy, StartDate) = " . date('Y') .
-//            " AND   DATEPART(mm, StartDate) = " . date('m') .
-//            " AND   DATEPART(dd, StartDate) = " . date('d');
-//    $stmt = sqlsrv_query($conn, $sql, array(), array("Scrollable" => SQLSRV_CURSOR_KEYSET));
-//    if ($stmt === false) {
-//        echo "Error in query preparation/execution.\n";
-//        die(print_r(sqlsrv_errors(), true));
-//    }
-//    $attendanceCount = sqlsrv_num_rows($stmt);
-//    if ($attendanceCount === false) {
-//        $attendanceCount = 0;
-//    } else {
-//        //echo "<br>debug m.one_Time_Event_Attendee_Count after ifs";
-//        sqlsrv_free_stmt($stmt);
-//        sqlsrv_close($conn);
-//        return $attendanceCount;
-//    }
-//}
-
+function get_multi_Event_Attendee_List($sessionEventId) {
+    //echo "<br>debug enter m.get_one_Time_Event_Attendee_List";
+    //echo "<br>debug m.get_one_Time_Event_Attendee_List eventId = " . $eventId;
+    $conn = db();
+    $sql = "SELECT M.[TANFMultipleSessionEventID]
+    ,M.[EventName]
+    ,S.[MultipleSessionEventSessionID]
+    ,S.[StartDate]
+    ,A.[PersonID]
+    ,P.[FirstName]
+    ,P.[LastName]
+    ,A.[Attended]
+    FROM [TANFMultipleSessionEventModule].[TANFMultipleSessionEvent] M
+    JOIN [TANFMultipleSessionEventModule].[MultipleSessionEventSession] S
+    ON M.[TANFMultipleSessionEventID] = S.[TANFMultipleSessionEventID]
+    JOIN [TANFMultipleSessionEventModule].[MultipleSessionEventSessionAttendee] A
+    ON S.[MultipleSessionEventSessionID] = A.[MultipleSessionEventSessionID]
+    JOIN [PersonModule].[Person] P
+    ON A.[PersonID] = P.[PersonID]
+        WHERE A.[MultipleSessionEventSessionID] = " . $sessionEventId .
+            " AND A.[Attended] = 1" .
+            " AND   DATEPART(yyyy, StartDate) = " . date('Y') .
+            " AND   DATEPART(mm, StartDate) = " . date('m') .
+            " AND   DATEPART(dd, StartDate) = " . date('d');
+    $stmt = sqlsrv_query($conn, $sql, array(), array("Scrollable" => SQLSRV_CURSOR_KEYSET));
+    if ($stmt === false) {
+        echo "Error in query preparation/execution.\n";
+        die(print_r(sqlsrv_errors(), true));
+    }
+    $attendanceCount = sqlsrv_num_rows($stmt);
+    if ($attendanceCount === false) {
+        $attendanceCount = 0;
+    } else {
+        //echo "<br>debug m.one_Time_Event_Attendee_Count after ifs";
+        sqlsrv_free_stmt($stmt);
+        sqlsrv_close($conn);
+        return $attendanceCount;
+    }
+}
 
 //function get_all_attendees_list($dbHouseholdId) {
 //    $conn = db();
