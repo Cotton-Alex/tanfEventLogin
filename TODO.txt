@@ -20,7 +20,7 @@ Feedback from Chad:
 05. param queries
 06. DONE - lucked out - must insert into all table names of the same type - SEE NOTE A.
 07. to search for partial name - LIKE '%string%'
-08. view template - subview template
+08. MUST SWITCH TO PDO_SQLSRV - view template - subview template
 09. DONE - INFO - null is the line, 0 is unchecked/empty, 1 is checked.
 10. back stack - check js
 
